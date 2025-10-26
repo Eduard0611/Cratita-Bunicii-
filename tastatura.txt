@@ -1,2 +1,19 @@
-5
-11 22 33 44 55
+3
+Faina 1000
+Oua 200
+Carne 500
+2
+Ciorba 15
+2
+Carne 100
+Faina 50
+Snitel 20
+2
+Carne 150
+Oua 20
+2
+2
+Ciorba Snitel
+1
+Ciorba
+
