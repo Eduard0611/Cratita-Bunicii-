@@ -160,7 +160,7 @@ void ZiRestaurant(meniu& Meniu, stoc& Stoc, double& profitTotal, int ziuaCurenta
             comenziRefuzate++;
         } else {
             bool ok = true;
-            for (auto& ing : p.getIngrediente()) {
+            for (const auto& ing : p.getIngrediente()) {
                 if (!Stoc.Consuma(ing.nume, ing.cantitate * cantitateProdus)) {
                     ok = false;
                     break;
