@@ -1,1 +1,8 @@
-
+Faina 7
+Oua 2
+Lapte 5
+Ulei 3.4
+Branza 3
+Carne 2
+Cartofi 8
+Sare 2.6
