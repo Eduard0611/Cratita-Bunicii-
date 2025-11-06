@@ -37,7 +37,7 @@ public:
     //[[nodiscard]]const std::string& getFunctie() const { return functie; }
     [[nodiscard]]double getSalariu() const { return salariu; }
     friend std::ostream& operator<<(std::ostream& out, const angajati& i) {
-        out << i.nume << " ocupa functia de " << i.functie << " si a fost platit cu " << i.salariu <<"RON pentru aceasta zi."<< std::endl;
+        out << i.nume << " ocupa functia de " << i.functie << " si a fost platit cu " << i.salariu <<" RON pentru aceasta zi."<< std::endl;
         return out;
     }
 };
@@ -273,15 +273,18 @@ public:
             } else {
                 double cantitateDeCumparat = std::floor(bugetAprovizionare / costPentruOUnitateDinFiecare);
 
-                double unitatiDoriteMax = 0.0;
-
+                double unitatiDoriteMax = std::numeric_limits<double>::max();
 
                 for (const ingrediente* ing : ingredienteNecesare) {
                     constexpr double MAX_UNITATI_DE_ADAUGAT = 15.0;
                     double cantitateDeficit = PRAG_MINIM - ing->getCantitate();
-                    if (cantitateDeficit < 0)
-                    unitatiDoriteMax = std::max(unitatiDoriteMax, MAX_UNITATI_DE_ADAUGAT - ing->getCantitate());
+                    if (cantitateDeficit > 0) {
+                        unitatiDoriteMax = std::min(unitatiDoriteMax, MAX_UNITATI_DE_ADAUGAT - ing->getCantitate());
+                    }
                 }
+
+                if (unitatiDoriteMax < 1)
+                    unitatiDoriteMax = 1;
 
                 cantitateDeCumparat = std::min(cantitateDeCumparat, unitatiDoriteMax);
 
