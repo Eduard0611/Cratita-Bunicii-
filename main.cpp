@@ -276,7 +276,7 @@ public:
                 double unitatiDoriteMax = 0.0;
 
 
-                for (const auto &ing: ingredienteNecesare) {
+                for (ingrediente* const ing : ingredienteNecesare) {
                     constexpr double MAX_UNITATI_DE_ADAUGAT = 15.0;
                     double cantitateDeficit = PRAG_MINIM - ing->getCantitate();
                     if (cantitateDeficit < 0)
