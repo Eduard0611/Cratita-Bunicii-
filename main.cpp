@@ -276,7 +276,7 @@ public:
                 double unitatiDoriteMax = 0.0;
 
 
-                for (auto &ing: ingredienteNecesare) {
+                for (const auto &ing: ingredienteNecesare) {
                     constexpr double MAX_UNITATI_DE_ADAUGAT = 15.0;
                     double cantitateDeficit = PRAG_MINIM - ing->getCantitate();
                     if (cantitateDeficit < 0)
@@ -291,7 +291,7 @@ public:
                     std::cout << "Se vor cumpara " << cantitateDeCumparat <<
                             " unitati din fiecare ingredient necesar.\n";
 
-                    for (auto &ing: ingredienteNecesare) {
+                    for (const auto &ing: ingredienteNecesare) {
                         double costCumparat = cantitateDeCumparat * ing->getPretAchizitie();
 
                         ing->scadeCantitate(-cantitateDeCumparat);
@@ -326,7 +326,7 @@ public:
         }
 
         std::cout << "\n";
-        for (auto& i : Angajati) {
+        for (const auto& i : Angajati) {
             profitTotal -= i.getSalariu();
             std::cout << i << std::endl;
         }
