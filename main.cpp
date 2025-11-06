@@ -11,9 +11,10 @@ private:
     double cantitate;
     double pretAchizitie;
 public:
-    ingrediente(const std::string& nume, double cantitate, double pretAchizitie) : nume(nume), cantitate(cantitate), pretAchizitie(pretAchizitie) {}
+    ingrediente(std::string nume, double cantitate, double pretAchizitie)
+        : nume(std::move(nume)), cantitate(cantitate), pretAchizitie(pretAchizitie) {}
 
-    [[nodiscard]]double getPretAchizitie() { return pretAchizitie; }
+    [[nodiscard]]double getPretAchizitie() const { return pretAchizitie; }
     [[nodiscard]]const std::string& getNume() const { return nume; }
     [[nodiscard]]double getCantitate() const { return cantitate; }
     void scadeCantitate(double x) { cantitate -= x; }
@@ -30,7 +31,8 @@ private:
     std::string functie;
     double salariu;
 public:
-    angajati(const std::string& nume, const std::string& functie, const double salariu) : nume(nume), functie(functie), salariu(salariu) {}
+    angajati(std::string nume, std::string functie, double salariu)
+        : nume(std::move(nume)), functie(std::move(functie)), salariu(salariu) {}
     [[nodiscard]]const std::string& getNume() const { return nume; }
     [[nodiscard]]const std::string& getFunctie() const { return functie; }
     [[nodiscard]]double getSalariu() const { return salariu; }
@@ -51,10 +53,8 @@ public:
     std::vector<ingrediente>& getStoc() { return Stocul_Restaurantului; }
 
     bool Consuma(const std::string& nume, double cantitate) {
-        bool gasit = false;
         for (auto& ing : Stocul_Restaurantului) {
             if (ing.getNume() == nume) {
-                gasit = true;
                 if (ing.getCantitate() < cantitate) {
                     std::cout << "Nu exista suficient/i/e " << nume << " in stoc!\n";
                     return false;
@@ -64,9 +64,7 @@ public:
                 }
             }
         }
-        if (!gasit) {
             std::cout << "Ingredientul " << nume << " nu exista in stoc!\n";
-        }
         return false;
     }
 
@@ -102,7 +100,7 @@ private:
     double pret;
     std::vector<IngNecesar> Ingrediente;
 public:
-    produs(const std::string& nume, double pret) : nume(nume), pret(pret) {}
+    produs(std::string nume, double pret) : nume(std::move(nume)), pret(pret) {}
 
     produs(const produs& other) : nume(other.nume), pret(other.pret), Ingrediente(other.Ingrediente) {}
 
@@ -115,7 +113,7 @@ public:
         return *this;
     }
 
-    ~produs() {}
+    ~produs() {};
 
     void AdaugaIngredienteInProdus(const std::string& numeIng, double cantitate) {
         Ingrediente.push_back({numeIng, cantitate});
@@ -166,15 +164,15 @@ private:
     bool ok = true;
     int cantitateProdus = 1 + rand() % 3;
     double eficienta = 0.0;
-    char raspuns;
+    char raspuns = ' ';
 public:
-    restaurant(const std::string& nume) : nume(nume) {}
-    void Angajeaza(angajati x) {
+    explicit restaurant(std::string nume) : nume(std::move(nume)) {}
+    void Angajeaza(const angajati& x) {
         Angajati.push_back(x);
     }
-    double getSalariiAngajati() {
+    [[nodiscard]]double getSalariiAngajati() const {
         double salarii = 0.0;
-        for (auto& i : Angajati) {
+        for (const auto& i : Angajati) {
             salarii += i.getSalariu();
         }
         return salarii;
@@ -185,7 +183,7 @@ public:
         out << "=========" << s.nume << " =========\n";
         for (const auto& ang : s.Angajati)
             out << ang << "\n";
-            return out;
+        return out;
     }
     void ZiRestaurant(meniu& Meniu, stoc& Stoc, double& profitTotal, int ziuaCurenta) {
             continuaZi = 'y';
@@ -207,7 +205,7 @@ public:
                     std::cout << "Nu exista produse in meniu!\n";
                     return;
                 }
-                int indexProdus = rand() % produse.size();
+                int indexProdus = static_cast<int>(rand() % produse.size());
                 produs p = produse[indexProdus];
                 std::cout << "\nClientul doreste " << cantitateProdus << " x " << p.getNume() << "\n";
                 std::cout << "Acceptati comanda? (y/n): ";
@@ -259,7 +257,7 @@ public:
                 std::cout << "\n--- Aprovizionare Automata ---\n";
                 std::cout << "Rezerva Salarii: " << costSalarii << " RON. Buget Aprovizionare: " << bugetAprovizionare << " RON.\n";
 
-                const double PRAG_MINIM = 5.0;
+                constexpr double PRAG_MINIM = 5.0;
                 std::vector<ingrediente*> ingredienteNecesare;
                 double costPentruOUnitateDinFiecare = 0.0;
 
@@ -274,14 +272,14 @@ public:
                 std::cout << "Nu este necesara aprovizionarea.\n";
             } else {
                 double cantitateDeCumparat = std::floor(bugetAprovizionare / costPentruOUnitateDinFiecare);
-                const double MAX_UNITATI_DE_ADAUGAT = 15.0;
+
                 double unitatiDoriteMax = 0.0;
 
 
                 for (auto &ing: ingredienteNecesare) {
+                    constexpr double MAX_UNITATI_DE_ADAUGAT = 15.0;
                     double cantitateDeficit = PRAG_MINIM - ing->getCantitate();
-                    if (cantitateDeficit < 0) cantitateDeficit = 0;
-
+                    if (cantitateDeficit < 0)
                     unitatiDoriteMax = std::max(unitatiDoriteMax, MAX_UNITATI_DE_ADAUGAT - ing->getCantitate());
                 }
 
