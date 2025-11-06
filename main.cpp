@@ -313,7 +313,7 @@ public:
             }
         }
         else {
-            std::cout << "\n--- Reaprovizionare manuala ---\n";
+            std::cout << "\n--- Aprovizionare manuala ---\n";
             std::cout << "Tineti cont de salariile angajatilor: " << getSalariiAngajati() << " RON si banii disponibili: " << profitTotal << std::endl;
             for (auto& ing : Stoc.getStoc()) {
                 int cantCumparata;
