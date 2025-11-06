@@ -34,7 +34,7 @@ public:
     angajati(std::string nume, std::string functie, double salariu)
         : nume(std::move(nume)), functie(std::move(functie)), salariu(salariu) {}
     [[nodiscard]]const std::string& getNume() const { return nume; }
-    [[nodiscard]]const std::string& getFunctie() const { return functie; }
+    //[[nodiscard]]const std::string& getFunctie() const { return functie; }
     [[nodiscard]]double getSalariu() const { return salariu; }
     friend std::ostream& operator<<(std::ostream& out, const angajati& i) {
         out << i.nume << " ocupa functia de " << i.functie << " si a fost platit cu " << i.salariu <<"RON pentru aceasta zi."<< std::endl;
