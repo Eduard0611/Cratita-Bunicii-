@@ -1,10 +1,9 @@
-#include "restaurant.h"
+#include "Restaurant.h"
 #include <iostream>
-#include <utility>   // std::move
-#include <cstdlib>   // rand()
-#include <cmath>     // floor
-#include <limits>    // numeric_limits
-#include <algorithm> // min, max
+#include <utility>
+#include <cmath>
+#include <limits>
+#include <algorithm>
 
 restaurant::restaurant(std::string nume) : nume(std::move(nume)) {}
 

@@ -1,8 +1,4 @@
-//
-// Created by Eduard-Ionut on 20.11.2025.
-//
-
-#include "produs.h"
+#include "Produs.h"
 #include <utility>
 
 

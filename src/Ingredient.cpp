@@ -1,4 +1,4 @@
-#include "ingredient.h"
+#include "Ingredient.h"
 #include <utility>
 
 ingredient::ingredient(std::string nume, double cantitate, double pretAchizitie)

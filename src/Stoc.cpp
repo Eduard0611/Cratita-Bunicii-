@@ -1,4 +1,4 @@
-#include "stoc.h"
+#include "Stoc.h"
 #include <fstream>  // Necesar pentru scrierea in fisiere (ofstream)
 #include <iostream>
 

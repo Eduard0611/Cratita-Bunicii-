@@ -1,4 +1,4 @@
-#include "angajat.h"
+#include "Angajat.h"
 #include <utility>
 
 angajat::angajat(std::string nume, std::string functie, double salariu)
