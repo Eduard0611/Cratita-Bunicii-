@@ -46,11 +46,20 @@ include(cmake/CopyHelper.cmake)
 # find_package(Threads REQUIRED)
 
 ###############################################################################
-
 # NOTE: update executable name in .github/workflows/cmake.yml:25 when changing name here
 add_executable(${MAIN_EXECUTABLE_NAME}
-    main.cpp
+        main.cpp
+        src/angajat.cpp
+        src/produs.cpp
+        src/ingredient.cpp
+        src/restaurant.cpp
+        src/meniu.cpp
+        src/stoc.cpp
 )
+
+target_include_directories(${MAIN_EXECUTABLE_NAME} PRIVATE headers)
+
+
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )
 # NOTE: RUN_SANITIZERS is optional, if it's not present it will default to true
