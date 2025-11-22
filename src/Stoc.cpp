@@ -1,5 +1,5 @@
 #include "Stoc.h"
-#include <fstream>  // Necesar pentru scrierea in fisiere (ofstream)
+#include <fstream>
 #include <iostream>
 
 void stoc::AdaugaIngredienteInStoc(const ingredient& ingredient) {

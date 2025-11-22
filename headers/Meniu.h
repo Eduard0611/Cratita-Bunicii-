@@ -3,9 +3,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
-
-// Includem produs.h pentru că folosim vector<produs>
-#include "produs.h"
+#include "Produs.h"
 
 class meniu {
 private:

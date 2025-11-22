@@ -2,7 +2,7 @@
 // Created by Eduard-Ionut on 20.11.2025.
 //
 
-#pragma once // Foarte important!
+#pragma once
 #include <string>
 #include <vector>
 #include <iostream>

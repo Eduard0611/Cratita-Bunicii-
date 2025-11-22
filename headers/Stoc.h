@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include "ingredient.h"
+#include "Ingredient.h"
 
 class stoc {
 private:

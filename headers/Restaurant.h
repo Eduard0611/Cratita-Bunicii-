@@ -4,10 +4,10 @@
 #include <vector>
 #include <iostream>
 
-// Includem clasele pe care restaurantul le folosește
-#include "angajat.h"
-#include "stoc.h"
-#include "meniu.h"
+
+#include "Angajat.h"
+#include "Stoc.h"
+#include "Meniu.h"
 
 class restaurant {
 private:
