@@ -20,7 +20,6 @@ public:
     [[nodiscard]] virtual double getPretVanzare() const;
 
     void AdaugaIngredienteInProdus(const std::string& numeIng, double cantitate);
-    [[nodiscard]] double getPretBase() const;
     [[nodiscard]] const std::string& getNume() const;
     std::vector<IngNecesar>& getIngrediente();
 

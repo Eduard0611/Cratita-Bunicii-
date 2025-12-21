@@ -16,8 +16,6 @@ double produs::getPretVanzare() const {
 void produs::AdaugaIngredienteInProdus(const std::string& numeIng, double cantitate) {
     Ingrediente.push_back({numeIng, cantitate});
 }
-
-double produs::getPretBase() const { return pret; }
 const std::string& produs::getNume() const { return nume; }
 std::vector<IngNecesar>& produs::getIngrediente() { return Ingrediente; }
 
