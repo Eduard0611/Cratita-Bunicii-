@@ -34,7 +34,7 @@ void restaurant::gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& prof
 
     std::cout << "\nClientul doreste " << cantitateProdus << " x " << p->getNume() << "\n";
 
-    if (auto* b = dynamic_cast<bautura*>(p)) {
+    if (const auto* b = dynamic_cast<const bautura*>(p)) {
         if (b->getVolumAlcool() > 0) {
              std::cout << "Atentie! Produs alcoolic (" << b->getVolumAlcool() << "%). Verificati varsta clientului.\n";
         }
