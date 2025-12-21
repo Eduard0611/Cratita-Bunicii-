@@ -31,7 +31,18 @@ int main() {
         return 1;
     }
     double pret;
-    while (fin2 >> cuv >> pret) Meniu.AdaugaProduse(produs(cuv, pret));
+    while (fin2 >> cuv >> pret) {
+        if (cuv.find("Vin") != std::string::npos || cuv.find("Bere") != std::string::npos || cuv.find("Suc") != std::string::npos) {
+            double alcool = (cuv.find("Suc") != std::string::npos) ? 0.0 : 12.0;
+            Meniu.AdaugaProdus(new bautura(cuv, pret, alcool));
+        }
+        else if (cuv.find("Papanasi") != std::string::npos || cuv.find("Clatite") != std::string::npos || cuv.find("Lava") != std::string::npos) {
+            Meniu.AdaugaProdus(new desert(cuv, pret, true));
+        }
+        else {
+            Meniu.AdaugaProdus(new mancare(cuv, pret));
+        }
+    }
     fin2.close();
 
     std::ifstream fin3("Informatii/Produse.txt");
@@ -72,7 +83,6 @@ int main() {
     }
     while (restaurantDeschis) {
         Restaurant.ZiRestaurant(Meniu, Stoc, profitTotal, ziuaCurenta);
-
 
         std::cout << "\nDoriti sa deschideti restaurantul ziua urmatoare si sa primiti clienti? (y/n): ";
         std::cin >> continua;

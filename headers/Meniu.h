@@ -1,5 +1,4 @@
 #pragma once
-
 #include <vector>
 #include <string>
 #include <iostream>
@@ -7,14 +6,21 @@
 
 class meniu {
 private:
-    std::vector<produs> produse;
+    std::vector<produs*> produse;
+
+    void sterge();
+    void copiaza(const std::vector<produs*>& altele);
 
 public:
+    meniu() = default;
 
-    void AdaugaProduse(const produs& p);
+    ~meniu();
+    meniu(const meniu& other);
+    meniu& operator=(const meniu& other);
 
-    std::vector<produs>& getProduse();
+    void AdaugaProdus(produs* p);
 
+    const std::vector<produs*>& getProduse() const;
     produs* CautaProdus(const std::string& nume);
 
     friend std::ostream& operator<<(std::ostream& out, const meniu& m);

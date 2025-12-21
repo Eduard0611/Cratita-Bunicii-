@@ -7,7 +7,6 @@
 
 restaurant::restaurant(std::string nume) : nume(std::move(nume)) {}
 
-
 void restaurant::incepeZiua(int ziuaCurenta, const stoc& Stoc) {
     continuaZi = 'y';
     comenziFinalizate = 0;
@@ -19,22 +18,29 @@ void restaurant::incepeZiua(int ziuaCurenta, const stoc& Stoc) {
     std::cout << Stoc;
 }
 
-void restaurant::gestioneazaComanda(meniu& Meniu, stoc& Stoc, double& profitTotal) {
+void restaurant::gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& profitTotal) {
     char raspuns = ' ';
     int cantitateProdus = 1 + rand() % 3;
 
     const auto &produse = Meniu.getProduse();
     if (produse.empty()) {
         std::cout << "Nu exista produse in meniu!\n";
+        continuaZi = 'n';
         return;
     }
 
     int indexProdus = static_cast<int>(rand() % produse.size());
-    // Facem o copie a produsului selectat
-    produs p = produse[indexProdus]; 
+    produs* p = produse[indexProdus];
 
-    std::cout << "\nClientul doreste " << cantitateProdus << " x " << p.getNume() << "\n";
-    std::cout << "Acceptati comanda? (y/n): ";
+    std::cout << "\nClientul doreste " << cantitateProdus << " x " << p->getNume() << "\n";
+
+    if (auto* b = dynamic_cast<bautura*>(p)) {
+        if (b->getVolumAlcool() > 0) {
+             std::cout << "Atentie! Produs alcoolic (" << b->getVolumAlcool() << "%). Verificati varsta clientului.\n";
+        }
+    }
+
+    std::cout << "Pret total: " << p->getPretVanzare() * cantitateProdus << " RON. Acceptati comanda? (y/n): ";
     std::cin >> raspuns;
 
     if (raspuns != 'y' && raspuns != 'Y') {
@@ -42,19 +48,19 @@ void restaurant::gestioneazaComanda(meniu& Meniu, stoc& Stoc, double& profitTota
         comenziRefuzate++;
     } else {
         bool ok = true;
-        for (const auto &ing: p.getIngrediente()) {
+        for (const auto &ing: p->getIngrediente()) {
             if (!Stoc.Consuma(ing.nume, ing.cantitate * cantitateProdus)) {
                 ok = false;
                 break;
             }
         }
         if (ok) {
-            double profitComanda = p.getPret() * cantitateProdus;
+            double profitComanda = p->getPretVanzare() * cantitateProdus;
             profitTotal += profitComanda;
             comenziFinalizate++;
             std::cout << "Comanda realizata! Profit: " << profitComanda << " RON\n";
         } else {
-            std::cout << "Comanda nu poate fi realizata complet!\n";
+            std::cout << "Comanda nu poate fi realizata complet! Stoc insuficient.\n";
             comenziRefuzate++;
         }
     }
@@ -120,7 +126,7 @@ void restaurant::aprovizionareAutomata(stoc& Stoc, double& profitTotal) const {
 
         for (auto &ing: ingredienteNecesare) {
             double costCumparat = cantitateDeCumparat * ing->getPretAchizitie();
-            ing->scadeCantitate(-cantitateDeCumparat); // Scadere negativa = Adunare
+            ing->scadeCantitate(-cantitateDeCumparat);
             costFinalAprovizionare += costCumparat;
 
             std::cout << "Aprovizionat " << ing->getNume() << " cu " << cantitateDeCumparat
@@ -137,16 +143,17 @@ void restaurant::aprovizionareAutomata(stoc& Stoc, double& profitTotal) const {
 void restaurant::aprovizionareManuala(stoc& Stoc, double& profitTotal) const {
     std::cout << "\n--- Aprovizionare manuala ---\n";
     std::cout << "Tineti cont de salariile angajatilor: " << getSalariiAngajati() << " RON si banii disponibili: " << profitTotal << std::endl;
-    
+
     for (auto& ing : Stoc.getStoc()) {
         int cantCumparata;
         do {
-            std::cout << "Cate unitati de " << ing.getNume() << " doriti sa cumparati? ";
+            std::cout << "Cate unitati de " << ing.getNume() << " (" << ing.getPretAchizitie()
+            << "RON/BUCATA" << ")"<< " doriti sa cumparati? ";
             std::cin >> cantCumparata;
             if (static_cast<double>(cantCumparata) * ing.getPretAchizitie() > profitTotal)
                 std::cout << "Bani insuficienti. Prea multe unitati." << std::endl;
         } while (static_cast<double>(cantCumparata) * ing.getPretAchizitie() > profitTotal);
-        
+
         ing.scadeCantitate(-cantCumparata);
         profitTotal -= static_cast<double>(cantCumparata) * ing.getPretAchizitie();
     }
@@ -172,14 +179,12 @@ void restaurant::finalizeazaZiua(const stoc& Stoc, double& profitTotal) {
 
     std::cout << "Profitul final este: " << profitTotal << " RON" << std::endl;
 
-    // Calcul Stele
     if (eficienta <= 0.5) stele = 1;
     else if (eficienta <= 0.7) stele = 2;
     else if (eficienta <= 0.9) stele = 3;
     else stele = 5;
 
     std::cout << "\nRating restaurant pe aceasta zi: " << stele << " Stea(e)\n";
-    
 
     Stoc.SalveazaStoc("Informatii/StocActualizat.txt");
 }
@@ -196,7 +201,7 @@ double restaurant::getSalariiAngajati() const {
     return salarii;
 }
 
-void restaurant::ZiRestaurant(meniu& Meniu, stoc& Stoc, double& profitTotal, int ziuaCurenta) {
+void restaurant::ZiRestaurant(const meniu& Meniu, stoc& Stoc, double& profitTotal, int ziuaCurenta) {
     incepeZiua(ziuaCurenta, Stoc);
 
     while (continuaZi == 'y' || continuaZi == 'Y') {
