@@ -6,7 +6,7 @@ private:
     int id;
     int capacitate;
     bool ocupata;
-    int timpRamas; // Numarul de comenzi pana la eliberare
+    int timpRamas;
 
 public:
     masa(int id, int capacitate);
@@ -16,7 +16,6 @@ public:
     [[nodiscard]] bool isOcupata() const;
     [[nodiscard]] int getTimpRamas() const;
 
-    // Default 0 pentru compatibilitate
     void setOcupata(bool status, int timp = 0);
     void scadeTimp();
 

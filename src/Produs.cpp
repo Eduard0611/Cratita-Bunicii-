@@ -46,11 +46,11 @@ produs* bautura::clone() const { return new bautura(*this); }
 
 void bautura::afisare(std::ostream& out) const {
     produs::afisare(out);
-    out << " [Tip: Bautura " << volumAlcool << "% alc.]";
+    out << " [Tip: Bautura " << getVolumAlcool() << "% alc.]";
 }
 
 double bautura::getPretVanzare() const {
-    if (volumAlcool > 0) return pret * 1.20; // Taxa 20%
+    if (volumAlcool > 0) return pret * 1.20;
     return pret;
 }
 

@@ -5,8 +5,6 @@
 #include <limits>
 #include <algorithm>
 #include <map>
-#include <cstdlib>
-
 restaurant::restaurant(std::string nume) : nume(std::move(nume)) {}
 
 void restaurant::AdaugaMasa(const masa& m) {
@@ -19,7 +17,6 @@ void restaurant::incepeZiua(int ziuaCurenta, const stoc& Stoc) {
     comenziRefuzate = 0;
     eficienta = 0.0;
 
-    // Resetam mesele la inceput de zi
     for(auto& m : Mese) {
         m.setOcupata(false);
     }
@@ -29,26 +26,24 @@ void restaurant::incepeZiua(int ziuaCurenta, const stoc& Stoc) {
     std::cout << Stoc;
 }
 
-// Aceasta functie verifica si elibereaza mesele al caror timp a expirat
 void restaurant::actualizeazaMese() {
-    bool sAuEliberatMese = false;
+    bool SauEliberatMese = false;
     for(auto& m : Mese) {
         if(m.isOcupata()) {
             m.scadeTimp();
             if(m.getTimpRamas() <= 0) {
                 m.setOcupata(false);
                 std::cout << "[INFO] Masa " << m.getId() << " s-a eliberat (clientii au plecat).\n";
-                sAuEliberatMese = true;
+                SauEliberatMese = true;
             }
         }
     }
-    if(sAuEliberatMese) {
+    if(SauEliberatMese) {
         std::cout << "------------------------------------------\n";
     }
 }
 
 void restaurant::gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& profitTotal) {
-    // 1. Mai intai actualizam starea meselor (trece timpul pentru clientii deja existenti)
     actualizeazaMese();
 
     int numarClienti = 1 + rand() % 8;
@@ -68,7 +63,6 @@ void restaurant::gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& prof
     std::cout << "\n==============Comanda=============\n";
     std::cout << "Numar clienti: " << numarClienti << "\n";
 
-    // Generam comanda
     for (int i = 0; i < numarProduseComandate; ++i) {
         int index = rand() % produseDisponibile.size();
         produs* p = produseDisponibile[index];
@@ -131,7 +125,6 @@ void restaurant::gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& prof
                 return;
             }
 
-            // --- CALCULAM TOTALUL DE INGREDIENTE NECESARE PENTRU TOATA COMANDA ---
             std::map<std::string, double> necesarTotal;
             for(const auto& item : comandaCurenta) {
                 for(const auto& ing : item.first->getIngrediente()) {
@@ -139,9 +132,8 @@ void restaurant::gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& prof
                 }
             }
 
-            // --- VERIFICAM DACA AVEM STOC PENTRU TOTAL ---
             bool stocSuficient = true;
-            std::vector<ingredient>& stocReal = Stoc.getStoc();
+            const std::vector<ingredient>&  stocReal = Stoc.getStoc();
 
             for(const auto& par : necesarTotal) {
                 std::string numeIngNecesar = par.first;
@@ -168,14 +160,11 @@ void restaurant::gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& prof
                 if(!stocSuficient) break; // Nu are rost sa verificam mai departe
             }
 
-            // --- EXECUTIE ---
             if(stocSuficient) {
-                // Consumam ingredientele (acum suntem siguri ca exista)
                 for(const auto& par : necesarTotal) {
                     Stoc.Consuma(par.first, par.second);
                 }
 
-                // Ocupam masa DOAR daca avem stoc
                 int durataOcupare = 2 + (rand() % 3);
                 m.setOcupata(true, durataOcupare);
 

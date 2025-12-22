@@ -21,7 +21,6 @@ private:
 
     void incepeZiua(int ziuaCurenta, const stoc& Stoc);
 
-    // Functie noua pentru gestionarea timpului
     void actualizeazaMese();
 
     void gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& profitTotal);

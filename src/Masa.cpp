@@ -6,17 +6,11 @@ int masa::getId() const {
     return id;
 }
 
-int masa::getCapacitate() const {
-    return capacitate;
-}
+int masa::getCapacitate() const { return capacitate; }
 
-bool masa::isOcupata() const {
-    return ocupata;
-}
+bool masa::isOcupata() const { return ocupata; }
 
-int masa::getTimpRamas() const {
-    return timpRamas;
-}
+int masa::getTimpRamas() const { return timpRamas; }
 
 void masa::setOcupata(bool status, int timp) {
     ocupata = status;

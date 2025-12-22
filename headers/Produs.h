@@ -33,7 +33,7 @@ protected:
     void afisare(std::ostream& out) const override;
 public:
     mancare(std::string nume, double pret, bool dePost = false);
-    produs* clone() const override;
+    [[nodiscard]]produs* clone() const override;
 };
 
 class bautura : public produs {
@@ -43,10 +43,10 @@ protected:
     void afisare(std::ostream& out) const override;
 public:
     bautura(std::string nume, double pret, double volumAlcool);
-    produs* clone() const override;
+    [[nodiscard]]produs* clone() const override;
 
-    double getPretVanzare() const override;
-    [[nodiscard]] double getVolumAlcool() const;
+    [[nodiscard]]double getPretVanzare() const override;
+    [[nodiscard]]double getVolumAlcool() const;
 };
 
 class desert : public produs {
@@ -56,5 +56,5 @@ protected:
     void afisare(std::ostream& out) const override;
 public:
     desert(std::string nume, double pret, bool contineZahar = true);
-    produs* clone() const override;
+    [[nodiscard]]produs* clone() const override;
 };
