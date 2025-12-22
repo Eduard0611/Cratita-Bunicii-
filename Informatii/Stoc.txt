@@ -1,8 +1,8 @@
-Faina 15 5
-Oua 15 10
-Lapte 10 14
-Ulei 10 5
-Branza 10 15
-Carne 10 20
-Cartofi 15 12
-Sare 8 5
+Faina 30 5
+Oua 40 10
+Lapte 30 14
+Ulei 20 5
+Branza 20 15
+Carne 30 20
+Cartofi 25 12
+Sare 15 5

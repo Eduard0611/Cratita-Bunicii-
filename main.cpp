@@ -10,6 +10,7 @@
 #include "Restaurant.h"
 #include "Meniu.h"
 #include "Stoc.h"
+#include "Masa.h"
 
 int main() {
     srand(static_cast<unsigned>(time(nullptr)));
@@ -68,6 +69,17 @@ int main() {
         Restaurant.Angajeaza(angajat(numeAngajat, functie, salariu));
     }
     fin4.close();
+
+    std::ifstream fin5("Informatii/Mese.txt");
+    if (!fin5.is_open()) {
+        std::cout << "Eroare: nu s-a putut deschide fisierul Mese pentru citire!\n";
+        return 1;
+    }
+    int idMasa, capMasa;
+    while (fin5 >> idMasa >> capMasa) {
+        Restaurant.AdaugaMasa(masa(idMasa, capMasa));
+    }
+    fin5.close();
 
     std::cout << Meniu;
 

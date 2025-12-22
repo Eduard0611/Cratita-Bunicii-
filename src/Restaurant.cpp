@@ -4,8 +4,14 @@
 #include <cmath>
 #include <limits>
 #include <algorithm>
+#include <map>
+#include <cstdlib>
 
 restaurant::restaurant(std::string nume) : nume(std::move(nume)) {}
+
+void restaurant::AdaugaMasa(const masa& m) {
+    Mese.push_back(m);
+}
 
 void restaurant::incepeZiua(int ziuaCurenta, const stoc& Stoc) {
     continuaZi = 'y';
@@ -13,56 +19,180 @@ void restaurant::incepeZiua(int ziuaCurenta, const stoc& Stoc) {
     comenziRefuzate = 0;
     eficienta = 0.0;
 
+    // Resetam mesele la inceput de zi
+    for(auto& m : Mese) {
+        m.setOcupata(false);
+    }
+
     std::cout << "\n=== Ziua " << ziuaCurenta << " ===\n";
     std::cout << "\n--- Stoc disponibil la inceputul zilei ---\n";
     std::cout << Stoc;
 }
 
-void restaurant::gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& profitTotal) {
-    char raspuns = ' ';
-    int cantitateProdus = 1 + rand() % 3;
+// Aceasta functie verifica si elibereaza mesele al caror timp a expirat
+void restaurant::actualizeazaMese() {
+    bool sAuEliberatMese = false;
+    for(auto& m : Mese) {
+        if(m.isOcupata()) {
+            m.scadeTimp();
+            if(m.getTimpRamas() <= 0) {
+                m.setOcupata(false);
+                std::cout << "[INFO] Masa " << m.getId() << " s-a eliberat (clientii au plecat).\n";
+                sAuEliberatMese = true;
+            }
+        }
+    }
+    if(sAuEliberatMese) {
+        std::cout << "------------------------------------------\n";
+    }
+}
 
-    const auto &produse = Meniu.getProduse();
-    if (produse.empty()) {
+void restaurant::gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& profitTotal) {
+    // 1. Mai intai actualizam starea meselor (trece timpul pentru clientii deja existenti)
+    actualizeazaMese();
+
+    int numarClienti = 1 + rand() % 8;
+
+    std::vector<std::pair<produs*, int>> comandaCurenta;
+    const auto &produseDisponibile = Meniu.getProduse();
+
+    if (produseDisponibile.empty()) {
         std::cout << "Nu exista produse in meniu!\n";
         continuaZi = 'n';
         return;
     }
 
-    int indexProdus = static_cast<int>(rand() % produse.size());
-    produs* p = produse[indexProdus];
+    int numarProduseComandate = numarClienti + (rand() % (numarClienti + 1));
+    double costTotalComanda = 0.0;
 
-    std::cout << "\nClientul doreste " << cantitateProdus << " x " << p->getNume() << "\n";
+    std::cout << "\n==============Comanda=============\n";
+    std::cout << "Numar clienti: " << numarClienti << "\n";
 
-    if (const auto* b = dynamic_cast<const bautura*>(p)) {
-        if (b->getVolumAlcool() > 0) {
-             std::cout << "Atentie! Produs alcoolic (" << b->getVolumAlcool() << "%). Verificati varsta clientului.\n";
-        }
-    }
+    // Generam comanda
+    for (int i = 0; i < numarProduseComandate; ++i) {
+        int index = rand() % produseDisponibile.size();
+        produs* p = produseDisponibile[index];
 
-    std::cout << "Pret total: " << p->getPretVanzare() * cantitateProdus << " RON. Acceptati comanda? (y/n): ";
-    std::cin >> raspuns;
-
-    if (raspuns != 'y' && raspuns != 'Y') {
-        std::cout << "Comanda a fost anulata.\n";
-        comenziRefuzate++;
-    } else {
-        bool ok = true;
-        for (const auto &ing: p->getIngrediente()) {
-            if (!Stoc.Consuma(ing.nume, ing.cantitate * cantitateProdus)) {
-                ok = false;
+        bool gasit = false;
+        for(auto& item : comandaCurenta) {
+            if(item.first->getNume() == p->getNume()) {
+                item.second++;
+                gasit = true;
                 break;
             }
         }
-        if (ok) {
-            double profitComanda = p->getPretVanzare() * cantitateProdus;
-            profitTotal += profitComanda;
-            comenziFinalizate++;
-            std::cout << "Comanda realizata! Profit: " << profitComanda << " RON\n";
-        } else {
-            std::cout << "Comanda nu poate fi realizata complet! Stoc insuficient.\n";
-            comenziRefuzate++;
+        if(!gasit) {
+            comandaCurenta.push_back({p, 1});
         }
+        costTotalComanda += p->getPretVanzare();
+    }
+
+    for(const auto& item : comandaCurenta) {
+        std::cout << item.second << " x " << item.first->getNume() << "\n";
+    }
+    std::cout << "Total de plata: " << costTotalComanda << " RON\n";
+    std::cout << "==================================\n";
+
+    std::cout << "\nLista Mese (Status Actualizat):\n";
+    bool meseLibere = false;
+    for(const auto& m : Mese) {
+        std::cout << m << "\n";
+        if (!m.isOcupata()) meseLibere = true;
+    }
+
+    if (!meseLibere) {
+        std::cout << "Ne pare rau, nu mai sunt mese libere! Comanda refuzata automat.\n";
+        comenziRefuzate++;
+        return;
+    }
+
+    int idMasaAleasa;
+    std::cout << "\nAsignati o masa (introduceti ID-ul mesei sau 0 pentru a refuza comanda): ";
+    std::cin >> idMasaAleasa;
+
+    if (idMasaAleasa == 0) {
+        std::cout << "Comanda refuzata manual.\n";
+        comenziRefuzate++;
+        return;
+    }
+
+    bool masaGasita = false;
+    for (auto& m : Mese) {
+        if (m.getId() == idMasaAleasa) {
+            masaGasita = true;
+            if (m.isOcupata()) {
+                std::cout << "Eroare: Masa este deja ocupata! Comanda anulata.\n";
+                comenziRefuzate++;
+                return;
+            }
+            if (m.getCapacitate() < numarClienti) {
+                std::cout << "Eroare: Capacitate insuficienta (" << m.getCapacitate() << " locuri vs " << numarClienti << " clienti)! Comanda anulata.\n";
+                comenziRefuzate++;
+                return;
+            }
+
+            // --- CALCULAM TOTALUL DE INGREDIENTE NECESARE PENTRU TOATA COMANDA ---
+            std::map<std::string, double> necesarTotal;
+            for(const auto& item : comandaCurenta) {
+                for(const auto& ing : item.first->getIngrediente()) {
+                    necesarTotal[ing.nume] += ing.cantitate * item.second;
+                }
+            }
+
+            // --- VERIFICAM DACA AVEM STOC PENTRU TOTAL ---
+            bool stocSuficient = true;
+            std::vector<ingredient>& stocReal = Stoc.getStoc();
+
+            for(const auto& par : necesarTotal) {
+                std::string numeIngNecesar = par.first;
+                double cantitateNecesara = par.second;
+                bool ingredientGasitInStoc = false;
+
+                for(const auto& ingStoc : stocReal) {
+                    if(ingStoc.getNume() == numeIngNecesar) {
+                        ingredientGasitInStoc = true;
+                        if(ingStoc.getCantitate() < cantitateNecesara) {
+                            stocSuficient = false;
+                            std::cout << "Stoc insuficient pentru " << numeIngNecesar
+                                      << "! Necesar total: " << cantitateNecesara
+                                      << ", Disponibil: " << ingStoc.getCantitate() << "\n";
+                        }
+                        break;
+                    }
+                }
+                if(!ingredientGasitInStoc) {
+                    stocSuficient = false;
+                    std::cout << "Ingredientul " << numeIngNecesar << " lipseste complet din stoc!\n";
+                }
+
+                if(!stocSuficient) break; // Nu are rost sa verificam mai departe
+            }
+
+            // --- EXECUTIE ---
+            if(stocSuficient) {
+                // Consumam ingredientele (acum suntem siguri ca exista)
+                for(const auto& par : necesarTotal) {
+                    Stoc.Consuma(par.first, par.second);
+                }
+
+                // Ocupam masa DOAR daca avem stoc
+                int durataOcupare = 2 + (rand() % 3);
+                m.setOcupata(true, durataOcupare);
+
+                profitTotal += costTotalComanda;
+                comenziFinalizate++;
+                std::cout << "Masa " << m.getId() << " a fost ocupata pentru urmatoarele " << durataOcupare << " comenzi.\n";
+            } else {
+                std::cout << "Comanda a fost refuzata din cauza lipsei de stoc.\n";
+                comenziRefuzate++;
+            }
+            break;
+        }
+    }
+
+    if (!masaGasita) {
+        std::cout << "ID masa invalid! Comanda anulata.\n";
+        comenziRefuzate++;
     }
 }
 

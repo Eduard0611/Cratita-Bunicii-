@@ -55,6 +55,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/Restaurant.cpp
         src/Meniu.cpp
         src/Stoc.cpp
+        headers/Masa.h
+        src/Masa.cpp
 )
 
 target_include_directories(${MAIN_EXECUTABLE_NAME} PRIVATE headers)
