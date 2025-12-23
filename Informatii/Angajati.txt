@@ -1,2 +1,6 @@
-Dorel Bucatar 50
-Mirel Chelner 40
+Ionut Bucatar_Sef 140
+Maria Ajutor_Bucatar 100
+Andrei Barman 80
+Elena Chelner 100
+George Chelner 100
+Radu Spalator_Vase 100

@@ -6,7 +6,7 @@ produs::produs(std::string nume, double pret) : nume(std::move(nume)), pret(pret
 produs::~produs() = default;
 
 void produs::afisare(std::ostream& out) const {
-    out << "Produs: " << nume << " | Pret Base: " << pret << " RON";
+    out << "Produs: " << nume << " | Pret: " << pret << " RON";
 }
 
 double produs::getPretVanzare() const {

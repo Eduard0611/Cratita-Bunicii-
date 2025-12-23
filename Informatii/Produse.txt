@@ -1,20 +1,51 @@
-Clatite Faina 2
-Clatite Oua 3
-Clatite Lapte 1
-Clatite Ulei 0.5
+Snitel_Vienez Carne_Pui 0.3
+Snitel_Vienez Oua 2
+Snitel_Vienez Faina 0.1
+Snitel_Vienez Ulei 0.1
+Snitel_Vienez Pesmet 0.1
 
-Omleta Oua 4
-Omleta Branza 1
-Omleta Ulei 0.3
-Omleta Sare 0.2
+Ciorba_Pui Carne_Pui 0.2
+Ciorba_Pui Legume_Mix 0.2
+Ciorba_Pui Apa_Minerala 0.3
+Ciorba_Pui Sare 0.05
 
-Snitel Carne 2
-Snitel Oua 2
-Snitel Faina 1
-Snitel Ulei 0.5
-Snitel Sare 0.2
+Friptura_de_Vita Carne_Vita 0.3
+Friptura_de_Vita Sare 0.05
+Friptura_de_Vita Ulei 0.05
 
-Cartofi_Prajiti Cartofi 3
-Cartofi_Prajiti Ulei 1
-Cartofi_Prajiti Sare 0.5
-Cartofi_Prajiti Branza 1
+Cartofi_Prajiti Cartofi 0.4
+Cartofi_Prajiti Ulei 0.1
+Cartofi_Prajiti Sare 0.02
+
+Legume_Sote Legume_Mix 0.3
+Legume_Sote Ulei 0.05
+Legume_Sote Sare 0.02
+
+Papanasi Branza 0.2
+Papanasi Faina 0.1
+Papanasi Oua 1
+Papanasi Zahar 0.05
+Papanasi Ulei 0.1
+
+Clatite_cu_Ciocolata Faina 0.1
+Clatite_cu_Ciocolata Lapte 0.2
+Clatite_cu_Ciocolata Oua 1
+Clatite_cu_Ciocolata Zahar 0.05
+Clatite_cu_Ciocolata Cacao 0.05
+
+Lava_Cake Cacao 0.1
+Lava_Cake Zahar 0.1
+Lava_Cake Faina 0.05
+Lava_Cake Oua 2
+Lava_Cake Ulei 0.05
+
+Vin_Alb Vin_Alb 0.25
+
+Vin_Rosu Vin_Rosu 0.25
+
+Bere_la_Halba Bere_la_Halba 0.5
+
+Cola_Zero Cola_Zero 0.25
+
+Cola_Vanilie Cola_Vanilie 0.25
+

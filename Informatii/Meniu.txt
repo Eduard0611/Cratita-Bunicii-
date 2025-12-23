@@ -1,4 +1,13 @@
-Clatite 20
-Omleta 18
-Snitel 30
+Snitel_Vienez 35
+Ciorba_Pui 22
+Friptura_de_Vita 55
 Cartofi_Prajiti 15
+Legume_Sote 18
+Papanasi 28
+Clatite_cu_Ciocolata 20
+Lava_Cake 32
+Vin_Alb 25
+Vin_Rosu 25
+Bere_la_Halba 18
+Cola_Vanilie 12
+Cola_Zero 12

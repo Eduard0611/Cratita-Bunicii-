@@ -84,7 +84,7 @@ int main() {
     std::cout << Meniu;
 
     bool restaurantDeschis = true;
-    double profitTotal = 100.0;
+    double profitTotal = 1000.0;
     int ziuaCurenta = 1;
     char continua;
 
