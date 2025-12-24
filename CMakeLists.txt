@@ -61,6 +61,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         headers/Evenimente.h
         src/Evenimente.cpp
         headers/Statistica.h
+        headers/FileManager.h
+        src/FileManager.cpp
 )
 
 target_include_directories(${MAIN_EXECUTABLE_NAME} PRIVATE headers)
