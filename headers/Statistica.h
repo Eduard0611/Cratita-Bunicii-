@@ -31,12 +31,12 @@ public:
         return *std::max_element(istoric.begin(), istoric.end());
     }
 
-    void afiseaza(const std::string& numeMetric) const {
+    void afiseaza(const std::string& nume) const {
         if (istoric.empty()) {
-            std::cout << "   " << numeMetric << ": Nu sunt date.\n";
+            std::cout << "   " << nume << ": Nu sunt date.\n";
             return;
         }
-        std::cout << "--- " << numeMetric << " ---\n";
+        std::cout << "--- " << nume << " ---\n";
         std::cout << "   Media: " << getMedie() << "\n";
         std::cout << "   Minim: " << getMin() << " | Maxim: " << getMax() << "\n\n";
     }

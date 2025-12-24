@@ -109,6 +109,15 @@ void restaurant::EvenimentSpecialClient(bool areLocLaMasa, double& profitTotal, 
     }
 }
 
+masa* restaurant::gasesteMasaLibera(int nrClienti) {
+    for (auto& m : Mese) {
+        if (!m.isOcupata() && m.getCapacitate() >= nrClienti) {
+            return &m;
+        }
+    }
+    return nullptr;
+}
+
 void restaurant::gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& profitTotal) {
     actualizeazaMese();
 
@@ -203,67 +212,49 @@ void restaurant::gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& prof
     }
 
     try {
-        bool masaGasita = false;
+        masa* masaGasita = nullptr;
         for (auto& m : Mese) {
             if (m.getId() == idMasaAleasa) {
-                masaGasita = true;
-
-                if (m.isOcupata()) {
-                    throw EroareComandaMasa("Masa selectata este deja OCUPATA!");
-                }
-                if (m.getCapacitate() < numarClienti) {
-                    throw EroareComandaMasa("Capacitate insuficienta (Clienti: " + std::to_string(numarClienti) + ", Locuri: " + std::to_string(m.getCapacitate()) + ")");
-                }
-
-                std::map<std::string, double> necesarTotal;
-                for(const auto& item : comandaCurenta) {
-                    for(const auto& ing : item.first->getIngrediente()) {
-                        necesarTotal[ing.nume] += ing.cantitate * item.second;
-                    }
-                }
-
-                const std::vector<ingredient>& stocReal = Stoc.getStoc();
-                for(const auto& par : necesarTotal) {
-                    bool ingGasit = false;
-                    for(const auto& ingStoc : stocReal) {
-                        if(ingStoc.getNume() == par.first) {
-                            ingGasit = true;
-                            if(ingStoc.getCantitate() < par.second) {
-                                throw EroareStocInsuficient(par.first);
-                            }
-                            break;
-                        }
-                    }
-                    if(!ingGasit) throw EroareStocInsuficient(par.first + " (Lipsa totala)");
-                }
-
-                for(const auto& par : necesarTotal) {
-                    Stoc.Consuma(par.first, par.second);
-                }
-
-                int durataOcupare = 2 + (rand() % 3);
-                m.setOcupata(true, durataOcupare);
-                profitTotal += costTotalComanda;
-                comenziFinalizate++;
-                CresteMurdarie(5.0);
-
-                std::cout << "Succes! Masa " << m.getId() << " ocupata pentru " << durataOcupare << " ture.\n";
-
-                int tipClient = rand() % 100;
-                if (tipClient < 10) {
-                    Influencer inf;
-                    inf.Executa(*this, Stoc, profitTotal, costTotalComanda, true);
-                } else if (tipClient < 20) {
-                    CriticCulinar critic;
-                    critic.Executa(*this, Stoc, profitTotal, costTotalComanda, true);
-                }
-
+                masaGasita = &m;
                 break;
             }
         }
 
         if (!masaGasita) {
             throw EroareComandaMasa("ID-ul mesei nu exista in restaurant!");
+        }
+
+        if (masaGasita->isOcupata()) {
+            throw EroareComandaMasa("Masa selectata este deja OCUPATA!");
+        }
+        if (masaGasita->getCapacitate() < numarClienti) {
+            throw EroareComandaMasa("Capacitate insuficienta (Clienti: " + std::to_string(numarClienti) + ", Locuri: " + std::to_string(masaGasita->getCapacitate()) + ")");
+        }
+
+        std::map<std::string, double> necesarTotal;
+        for(const auto& item : comandaCurenta) {
+            for(const auto& ing : item.first->getIngrediente()) {
+                necesarTotal[ing.nume] += ing.cantitate * item.second;
+            }
+        }
+
+        Stoc.VerificaSiConsuma(necesarTotal);
+
+        int durataOcupare = 2 + (rand() % 3);
+        masaGasita->setOcupata(true, durataOcupare);
+        profitTotal += costTotalComanda;
+        comenziFinalizate++;
+        CresteMurdarie(5.0);
+
+        std::cout << "Succes! Masa " << masaGasita->getId() << " ocupata pentru " << durataOcupare << " ture.\n";
+
+        int tipClient = rand() % 100;
+        if (tipClient < 10) {
+            Influencer inf;
+            inf.Executa(*this, Stoc, profitTotal, costTotalComanda, true);
+        } else if (tipClient < 20) {
+            CriticCulinar critic;
+            critic.Executa(*this, Stoc, profitTotal, costTotalComanda, true);
         }
 
     } catch (const EroareRestaurant& e) {
@@ -366,6 +357,12 @@ void restaurant::gestioneazaAprovizionare(stoc& Stoc, double& profitTotal) const
     else if (raspuns == 2) aprovizionareManuala(Stoc, profitTotal);
 }
 
+void restaurant::afiseazaRaportFinal() const {
+    std::cout << "\n\n======== RAPORT FINAL DE ACTIVITATE ========\n";
+    stats.raportFinal();
+    std::cout << "============================================\n";
+}
+
 void restaurant::MeniuAdministrare(double& profitTotal, bool& jocActiv) {
     int optiune = 0;
     while(true) {
@@ -422,7 +419,7 @@ void restaurant::MeniuAdministrare(double& profitTotal, bool& jocActiv) {
             break;
         }
         else if (optiune == 6) {
-            stats.raportFinal();
+            afiseazaRaportFinal();
             jocActiv = false;
             break;
         }
@@ -476,7 +473,7 @@ void restaurant::ZiRestaurant(const meniu& Meniu, stoc& Stoc, double& profitTota
     if(profitTotal > 0) {
         MeniuAdministrare(profitTotal, jocActiv);
     } else {
-        stats.raportFinal();
+        afiseazaRaportFinal();
         std::cout << "Nu puteti accesa magazinul (Fonduri insuficiente sau datorii).\n";
     }
 }

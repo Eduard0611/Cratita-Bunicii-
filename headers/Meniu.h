@@ -7,20 +7,22 @@
 class meniu {
 private:
     std::vector<produs*> produse;
-
     void sterge();
     void copiaza(const std::vector<produs*>& altele);
 
 public:
     meniu() = default;
-
     ~meniu();
+
     meniu(const meniu& other);
-    meniu& operator=(const meniu& other);
+
+    meniu& operator=(meniu other);
+
+    friend void swap(meniu& first, meniu& second) noexcept;
 
     void AdaugaProdus(produs* p);
 
-    const std::vector<produs*>& getProduse() const;
+    [[nodiscard]]const std::vector<produs*>& getProduse() const;
     produs* CautaProdus(const std::string& nume);
 
     friend std::ostream& operator<<(std::ostream& out, const meniu& m);

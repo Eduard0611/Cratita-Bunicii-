@@ -19,11 +19,13 @@ meniu::meniu(const meniu& other) {
     copiaza(other.produse);
 }
 
-meniu& meniu::operator=(const meniu& other) {
-    if (this != &other) {
-        sterge();
-        copiaza(other.produse);
-    }
+void swap(meniu& first, meniu& second) noexcept {
+    using std::swap;
+    swap(first.produse, second.produse);
+}
+
+meniu& meniu::operator=(meniu other) {
+    swap(*this, other);
     return *this;
 }
 

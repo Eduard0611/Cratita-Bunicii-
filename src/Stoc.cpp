@@ -25,6 +25,26 @@ bool stoc::Consuma(const std::string& nume, double cantitate) {
     throw EroareStocInsuficient(nume + " (Ingredient inexistent in inventar)");
 }
 
+void stoc::VerificaSiConsuma(const std::map<std::string, double>& necesar) {
+    for (const auto& par : necesar) {
+        bool gasit = false;
+        for (const auto& ing : Stocul_Restaurantului) {
+            if (ing.getNume() == par.first) {
+                if (ing.getCantitate() < par.second) {
+                    throw EroareStocInsuficient(par.first);
+                }
+                gasit = true;
+                break;
+            }
+        }
+        if (!gasit) throw EroareStocInsuficient(par.first + " (Lipsa totala)");
+    }
+
+    for (const auto& par : necesar) {
+        Consuma(par.first, par.second);
+    }
+}
+
 void stoc::DegradeazaStocPerisabil(double procent) {
     int contor = 0;
     for(auto& ing : Stocul_Restaurantului) {

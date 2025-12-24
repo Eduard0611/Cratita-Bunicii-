@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <map>
 #include "Ingredient.h"
 
 class stoc {
@@ -11,9 +12,15 @@ private:
 
 public:
     void AdaugaIngredienteInStoc(const ingredient& ingredient);
+
     std::vector<ingredient>& getStoc();
+
     bool Consuma(const std::string& nume, double cantitate);
+
+    void VerificaSiConsuma(const std::map<std::string, double>& necesar);
+
     void DegradeazaStocPerisabil(double procent);
+
     void SalveazaStoc(const std::string& numeFisier) const;
 
     friend std::ostream& operator<<(std::ostream& out, const stoc& s);
