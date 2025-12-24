@@ -28,11 +28,11 @@ private:
     void incheieTranzactiile(const stoc& Stoc, double profitTotal);
 
     void aprovizionareAutomata(stoc& Stoc, double& profitTotal) const;
-    static void aprovizionareManuala(stoc& Stoc, double& profitTotal);
+    void aprovizionareManuala(stoc& Stoc, double& profitTotal) const;
     void gestioneazaAprovizionare(stoc& Stoc, double& profitTotal) const;
 
     void finalizeazaZiua(const stoc& Stoc, double& profitTotal);
-    void MeniuAdministrare(double& profitTotal);
+    void MeniuAdministrare(double& profitTotal, bool& jocActiv);
 
 public:
     explicit restaurant(std::string nume);
@@ -42,7 +42,7 @@ public:
 
     [[nodiscard]] double getSalariiAngajati() const;
 
-    void ZiRestaurant(const meniu& Meniu, stoc& Stoc, double& profitTotal, int ziuaCurenta);
+    void ZiRestaurant(const meniu& Meniu, stoc& Stoc, double& profitTotal, int ziuaCurenta, bool& jocActiv);
 
     friend std::ostream& operator<<(std::ostream& out, const restaurant& s);
 };

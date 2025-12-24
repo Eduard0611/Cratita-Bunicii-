@@ -2,8 +2,10 @@
 #include <iostream>
 #include <utility>
 #include <cmath>
+#include <limits>
 #include <algorithm>
 #include <map>
+#include <cstdlib>
 
 restaurant::restaurant(std::string nume) : nume(std::move(nume)), nivelDecor(0), nivelPublicitate(0) {}
 
@@ -75,7 +77,7 @@ void restaurant::gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& prof
             }
         }
         if(!gasit) {
-            comandaCurenta.emplace_back(p, 1);
+            comandaCurenta.push_back({p, 1});
         }
         costTotalComanda += p->getPretVanzare();
     }
@@ -233,7 +235,7 @@ void restaurant::aprovizionareAutomata(stoc& Stoc, double& profitTotal) const {
     }
 }
 
-void restaurant::aprovizionareManuala(stoc& Stoc, double& profitTotal) {
+void restaurant::aprovizionareManuala(stoc& Stoc, double& profitTotal) const {
     std::cout << "\n--- Aprovizionare Manuala ---\n";
     for (auto& ing : Stoc.getStoc()) {
         std::cout << ing.getNume() << " (Stoc: " << ing.getCantitate() << ") - Pret: " << ing.getPretAchizitie() << " RON. Cumperi? (0=Nu, >0=Cantitate): ";
@@ -260,39 +262,47 @@ void restaurant::gestioneazaAprovizionare(stoc& Stoc, double& profitTotal) const
     else if (raspuns == 2) aprovizionareManuala(Stoc, profitTotal);
 }
 
-void restaurant::MeniuAdministrare(double& profitTotal) {
+void restaurant::MeniuAdministrare(double& profitTotal, bool& jocActiv) {
     int optiune = 0;
-    while(optiune != 4) {
+    while(true) {
         std::cout << "\n=== ADMINISTRARE & SHOP ===\n";
         std::cout << "Buget Actual: " << profitTotal << " RON\n";
         std::cout << "1. Cumpara Masa Noua (Cost: 200 RON)\n";
         std::cout << "2. Upgrade Decor (Cost: 300 RON) -> Creste preturile cu 5%\n";
         std::cout << "3. Publicitate (Cost: 150 RON) -> Mai multi clienti maine\n";
         std::cout << "4. Start Ziua Urmatoare\n";
+        std::cout << "5. Parasiti jocul\n";
         std::cout << "Alegeti: ";
         std::cin >> optiune;
 
-        if(optiune == 1) {
+        if (optiune == 1) {
             if(profitTotal >= 200) {
                 profitTotal -= 200;
                 int idNou = Mese.size() + 1;
-                Mese.emplace_back(idNou, 4);
+                Mese.push_back(masa(idNou, 4));
                 std::cout << "Masa " << idNou << " (Capacitate 4) a fost adaugata!\n";
             } else std::cout << "Fonduri insuficiente!\n";
         }
-        else if(optiune == 2) {
+        else if (optiune == 2) {
             if(profitTotal >= 300) {
                 profitTotal -= 300;
                 nivelDecor++;
                 std::cout << "Decor imbunatatit la nivelul " << nivelDecor << "!\n";
             } else std::cout << "Fonduri insuficiente!\n";
         }
-        else if(optiune == 3) {
+        else if (optiune == 3) {
             if(profitTotal >= 150) {
                 profitTotal -= 150;
                 nivelPublicitate++;
                 std::cout << "Campanie publicitara pornita! Nivel curent: " << nivelPublicitate << "\n";
             } else std::cout << "Fonduri insuficiente!\n";
+        }
+        else if (optiune == 4) {
+            break;
+        }
+        else if (optiune == 5) {
+            jocActiv = false;
+            break;
         }
     }
 }
@@ -326,7 +336,7 @@ double restaurant::getSalariiAngajati() const {
     return salarii;
 }
 
-void restaurant::ZiRestaurant(const meniu& Meniu, stoc& Stoc, double& profitTotal, int ziuaCurenta) {
+void restaurant::ZiRestaurant(const meniu& Meniu, stoc& Stoc, double& profitTotal, int ziuaCurenta, bool& jocActiv) {
     incepeZiua(ziuaCurenta, Stoc);
 
     int numarComenziZi = 4 + (nivelPublicitate * 2);
@@ -341,7 +351,9 @@ void restaurant::ZiRestaurant(const meniu& Meniu, stoc& Stoc, double& profitTota
     gestioneazaAprovizionare(Stoc, profitTotal);
 
     if(profitTotal > 0) {
-        MeniuAdministrare(profitTotal);
+        MeniuAdministrare(profitTotal, jocActiv);
+    } else {
+        std::cout << "Nu puteti accesa magazinul (Fonduri insuficiente sau datorii).\n";
     }
 }
 

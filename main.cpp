@@ -91,7 +91,12 @@ int main() {
     std::cin.get();
 
     while (jocActiv) {
-        Restaurant.ZiRestaurant(Meniu, Stoc, profitTotal, ziuaCurenta);
+        Restaurant.ZiRestaurant(Meniu, Stoc, profitTotal, ziuaCurenta, jocActiv);
+
+        if (!jocActiv) {
+            std::cout << "Jocul a fost inchis manual. La revedere!\n";
+            break;
+        }
 
         if (profitTotal < 0) {
             std::cout << "\n!!! FALIMENT !!!\n";
