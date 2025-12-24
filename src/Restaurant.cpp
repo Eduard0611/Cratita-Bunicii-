@@ -1,11 +1,11 @@
 #include "Restaurant.h"
+#include "Exceptii.h"
 #include <iostream>
 #include <utility>
 #include <cmath>
-#include <limits>
 #include <algorithm>
 #include <map>
-#include <cstdlib>
+
 
 restaurant::restaurant(std::string nume) : nume(std::move(nume)), nivelDecor(0), nivelPublicitate(0) {}
 
@@ -113,74 +113,62 @@ void restaurant::gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& prof
         return;
     }
 
-    bool masaGasita = false;
-    for (auto& m : Mese) {
-        if (m.getId() == idMasaAleasa) {
-            masaGasita = true;
-            if (m.isOcupata()) {
-                std::cout << "Eroare: Masa ocupata! Comanda pierduta.\n";
-                comenziRefuzate++;
-                return;
-            }
-            if (m.getCapacitate() < numarClienti) {
-                std::cout << "Eroare: Masa prea mica! Clientii au plecat suparati.\n";
-                comenziRefuzate++;
-                return;
-            }
+    try {
+        bool masaGasita = false;
+        for (auto& m : Mese) {
+            if (m.getId() == idMasaAleasa) {
+                masaGasita = true;
 
-            std::map<std::string, double> necesarTotal;
-            for(const auto& item : comandaCurenta) {
-                for(const auto& ing : item.first->getIngrediente()) {
-                    necesarTotal[ing.nume] += ing.cantitate * item.second;
+                if (m.isOcupata()) {
+                    throw EroareComandaMasa("Masa selectata este deja OCUPATA!");
                 }
-            }
+                if (m.getCapacitate() < numarClienti) {
+                    throw EroareComandaMasa("Capacitate insuficienta (Clienti: " + std::to_string(numarClienti) + ", Locuri: " + std::to_string(m.getCapacitate()) + ")");
+                }
 
-            bool stocSuficient = true;
-            const std::vector<ingredient>& stocReal = Stoc.getStoc();
-
-            for(const auto& par : necesarTotal) {
-                bool ingGasit = false;
-                for(const auto& ingStoc : stocReal) {
-                    if(ingStoc.getNume() == par.first) {
-                        ingGasit = true;
-                        if(ingStoc.getCantitate() < par.second) {
-                            stocSuficient = false;
-                            std::cout << "[EROARE STOC] Insuficient: " << par.first
-                                      << " (Necesar: " << par.second
-                                      << ", Disponibil: " << ingStoc.getCantitate() << ")\n";
-                        }
-                        break;
+                std::map<std::string, double> necesarTotal;
+                for(const auto& item : comandaCurenta) {
+                    for(const auto& ing : item.first->getIngrediente()) {
+                        necesarTotal[ing.nume] += ing.cantitate * item.second;
                     }
                 }
-                if(!ingGasit) {
-                    stocSuficient = false;
-                    std::cout << "[EROARE STOC] Ingredient lipsa din inventar: " << par.first
-                              << " (Verifica Produse.txt vs Stoc.txt)\n";
+                const std::vector<ingredient>& stocReal = Stoc.getStoc();
+                for(const auto& par : necesarTotal) {
+                    bool ingGasit = false;
+                    for(const auto& ingStoc : stocReal) {
+                        if(ingStoc.getNume() == par.first) {
+                            ingGasit = true;
+                            if(ingStoc.getCantitate() < par.second) {
+                                throw EroareStocInsuficient(par.first);
+                            }
+                            break;
+                        }
+                    }
+                    if(!ingGasit) throw EroareStocInsuficient(par.first + " (Lipsa totala)");
                 }
 
-                if(!stocSuficient) break;
-            }
-
-            if(stocSuficient) {
                 for(const auto& par : necesarTotal) {
                     Stoc.Consuma(par.first, par.second);
                 }
+
                 int durataOcupare = 2 + (rand() % 3);
                 m.setOcupata(true, durataOcupare);
                 profitTotal += costTotalComanda;
                 comenziFinalizate++;
                 std::cout << "Succes! Masa " << m.getId() << " ocupata pentru " << durataOcupare << " ture.\n";
-            } else {
-                std::cout << "Lipsa stoc! Comanda anulata.\n";
-                comenziRefuzate++;
+                break;
             }
-            break;
         }
-    }
 
-    if (!masaGasita) {
-        std::cout << "ID Masa invalid. Comanda anulata.\n";
+        if (!masaGasita) {
+            throw EroareComandaMasa("ID-ul mesei nu exista in restaurant!");
+        }
+
+    } catch (const EroareRestaurant& e) {
+        std::cout << "\n[!] COMANDA ANULATA: " << e.what() << "\n";
         comenziRefuzate++;
+    } catch (const std::exception& e) {
+        std::cout << "\n[!] Eroare neasteptata: " << e.what() << "\n";
     }
 }
 
@@ -271,7 +259,7 @@ void restaurant::MeniuAdministrare(double& profitTotal, bool& jocActiv) {
         std::cout << "2. Upgrade Decor (Cost: 300 RON) -> Creste preturile cu 5%\n";
         std::cout << "3. Publicitate (Cost: 150 RON) -> Mai multi clienti maine\n";
         std::cout << "4. Start Ziua Urmatoare\n";
-        std::cout << "5. Parasiti jocul\n";
+        std::cout << "5. Iesire din Joc\n";
         std::cout << "Alegeti: ";
         std::cin >> optiune;
 

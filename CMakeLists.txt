@@ -57,6 +57,7 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/Stoc.cpp
         headers/Masa.h
         src/Masa.cpp
+        headers/Exceptii.h
 )
 
 target_include_directories(${MAIN_EXECUTABLE_NAME} PRIVATE headers)

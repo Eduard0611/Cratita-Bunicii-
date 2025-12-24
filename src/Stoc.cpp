@@ -1,4 +1,5 @@
 #include "Stoc.h"
+#include "Exceptii.h"
 #include <fstream>
 #include <iostream>
 
@@ -14,16 +15,14 @@ bool stoc::Consuma(const std::string& nume, double cantitate) {
     for (auto& ing : Stocul_Restaurantului) {
         if (ing.getNume() == nume) {
             if (ing.getCantitate() < cantitate) {
-                std::cout << "Nu exista suficient/i/e " << nume << " in stoc!\n";
-                return false;
+                throw EroareStocInsuficient(nume);
             } else {
                 ing.scadeCantitate(cantitate);
                 return true;
             }
         }
     }
-    std::cout << "Ingredientul " << nume << " nu exista in stoc!\n";
-    return false;
+    throw EroareStocInsuficient(nume + " (Ingredient inexistent in inventar)");
 }
 
 void stoc::SalveazaStoc(const std::string& numeFisier) const {
