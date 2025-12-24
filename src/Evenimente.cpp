@@ -1,7 +1,6 @@
 #include "Evenimente.h"
 #include <iostream>
 #include <limits>
-#include <cstdlib>
 
 std::string InspectieSanitara::getNume() const {
     return "Inspectie Sanitara";
@@ -75,18 +74,12 @@ void Influencer::Executa(restaurant& r, stoc& s, double& profitTotal, double cos
     std::cout << "\n[!] EVENIMENT: Unul dintre clienti este un INFLUENCER faimos!\n";
 
     if (areLocLaMasa) {
-        std::cout << "(Stocul a fost consumat pentru comanda lui)\n";
         std::cout << "Influencerul cere toata comanda GRATIS (" << costComanda << " RON) pentru un Story.\n";
-        std::cout << "1. Accepta (Returnezi banii, Publicitate +1)\n";
-        std::cout << "2. Refuza (Pastrezi banii, Publicitate -1)\n";
+        std::cout << "1. Accepta (Publicitate +1)\n";
+        std::cout << "2. Refuza (Publicitate -1)\n";
         int opt;
         std::cin >> opt;
 
-        if (std::cin.fail()) {
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            opt = 2;
-        }
 
         if (opt == 1) {
             profitTotal -= costComanda;
@@ -112,7 +105,7 @@ void CriticCulinar::Executa(restaurant& r, stoc& s, double& profitTotal, double 
 
     std::cout << "\n[!] EVENIMENT: Un CRITIC CULINAR se afla in acest grup!\n";
     if (areLocLaMasa) {
-        std::cout << "(Stocul a fost consumat, criticul degusta preparatele...)\n";
+        std::cout << "(Criticul degusta preparatele...)\n";
 
         if (rand() % 2 == 0) {
             std::cout << "Criticul a fost IMPRESIONAT! (+200 RON Bonus + Publicitate)\n";
