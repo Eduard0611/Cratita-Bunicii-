@@ -59,65 +59,6 @@ void restaurant::actualizeazaMese() {
     if(SauEliberatMese) std::cout << "\n";
 }
 
-void restaurant::EvenimentSpecialClient(bool areLocLaMasa, double& profitTotal, double costComanda) {
-    int tipClient = rand() % 100;
-
-    if (tipClient < 10) {
-        std::cout << "\n[!] EVENIMENT: Clientul este un INFLUENCER faimos!\n";
-
-        if (areLocLaMasa) {
-            std::cout << "Cere masa gratis (" << costComanda << " RON) in schimbul promovarii.\n";
-            std::cout << "1. Accepta (Platesti tu, Publicitate +1)\n";
-            std::cout << "2. Refuza (Plateste el, Publicitate -1)\n";
-            int opt;
-            std::cin >> opt;
-
-            if (std::cin.fail()) {
-                std::cin.clear();
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                opt = 2;
-            }
-
-            if (opt == 1) {
-                profitTotal -= costComanda;
-                modificaPublicitate(1);
-                std::cout << "Ai acceptat. Influencerul a postat pe Instagram! Nivel Publicitate: " << nivelPublicitate << "\n";
-            } else {
-                modificaPublicitate(-1);
-                std::cout << "Ai refuzat. Influencerul a lasat un review prost. Nivel Publicitate: " << nivelPublicitate << "\n";
-            }
-        } else {
-            std::cout << "Influencerul nu a primit masa si a plecat nervos! (Publicitate -1)\n";
-            modificaPublicitate(-1);
-        }
-    }
-    else if (tipClient < 20) {
-        std::cout << "\n[!] EVENIMENT: Un CRITIC CULINAR se afla in acest grup!\n";
-        if (areLocLaMasa) {
-            if (rand() % 2 == 0) {
-                std::cout << "Criticul a fost IMPRESIONAT! (+200 RON Bonus + Publicitate)\n";
-                profitTotal += 200;
-                modificaPublicitate(1);
-            } else {
-                std::cout << "Criticul a fost DEZAMAGIT! (Publicitate -1)\n";
-                modificaPublicitate(-1);
-            }
-        } else {
-            std::cout << "Criticul nu a primit masa! (Publicitate -1)\n";
-            modificaPublicitate(-1);
-        }
-    }
-}
-
-masa* restaurant::gasesteMasaLibera(int nrClienti) {
-    for (auto& m : Mese) {
-        if (!m.isOcupata() && m.getCapacitate() >= nrClienti) {
-            return &m;
-        }
-    }
-    return nullptr;
-}
-
 void restaurant::gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& profitTotal) {
     actualizeazaMese();
 
@@ -411,7 +352,7 @@ void restaurant::MeniuAdministrare(double& profitTotal, bool& jocActiv) {
         else if (optiune == 4) {
             if(profitTotal >= 100) {
                 profitTotal -= 100;
-                gradMurdarie = 0.0;
+                CurataRestaurant();
                 std::cout << "Restaurantul a fost curatat luna!\n";
             } else std::cout << "Fonduri insuficiente!\n";
         }

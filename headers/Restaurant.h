@@ -38,10 +38,7 @@ private:
     void finalizeazaZiua(const stoc& Stoc, double& profitTotal);
     void MeniuAdministrare(double& profitTotal, bool& jocActiv);
 
-    void EvenimentSpecialClient(bool areLocLaMasa, double& profitTotal, double costComanda);
     void afiseazaRaportFinal() const;
-
-    masa* gasesteMasaLibera(int nrClienti);
 
 public:
     explicit restaurant(std::string nume);
