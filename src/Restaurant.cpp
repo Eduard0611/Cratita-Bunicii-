@@ -339,7 +339,7 @@ void restaurant::MeniuAdministrare(double& profitTotal, bool& jocActiv) {
         else if (optiune == 4) {
             if(profitTotal >= 100) {
                 profitTotal -= 100;
-                gradMurdarie = 0.0;
+                CurataRestaurant();
                 std::cout << "Restaurantul a fost curatat luna!\n";
             } else std::cout << "Fonduri insuficiente!\n";
         }
