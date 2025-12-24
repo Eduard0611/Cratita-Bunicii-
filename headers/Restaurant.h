@@ -7,12 +7,15 @@
 #include "Stoc.h"
 #include "Meniu.h"
 #include "Masa.h"
+#include "Statistica.h"
 
 class restaurant {
 private:
     std::string nume;
     std::vector<angajat> Angajati;
     std::vector<masa> Mese;
+
+    Statistica stats;
 
     int comenziFinalizate = 0;
     int comenziRefuzate = 0;
@@ -34,6 +37,8 @@ private:
 
     void finalizeazaZiua(const stoc& Stoc, double& profitTotal);
     void MeniuAdministrare(double& profitTotal, bool& jocActiv);
+
+    void EvenimentSpecialClient(bool areLocLaMasa, double& profitTotal, double costComanda);
 
 public:
     explicit restaurant(std::string nume);

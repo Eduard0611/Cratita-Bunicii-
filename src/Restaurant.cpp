@@ -4,9 +4,10 @@
 #include <iostream>
 #include <utility>
 #include <cmath>
+#include <limits>
 #include <algorithm>
 #include <map>
-
+#include <cstdlib>
 
 restaurant::restaurant(std::string nume) : nume(std::move(nume)), nivelDecor(0), nivelPublicitate(0), gradMurdarie(0.0) {}
 
@@ -58,6 +59,56 @@ void restaurant::actualizeazaMese() {
     if(SauEliberatMese) std::cout << "\n";
 }
 
+void restaurant::EvenimentSpecialClient(bool areLocLaMasa, double& profitTotal, double costComanda) {
+    int tipClient = rand() % 100;
+
+    if (tipClient < 10) {
+        std::cout << "\n[!] EVENIMENT: Clientul este un INFLUENCER faimos!\n";
+
+        if (areLocLaMasa) {
+            std::cout << "Cere masa gratis (" << costComanda << " RON) in schimbul promovarii.\n";
+            std::cout << "1. Accepta (Platesti tu, Publicitate +1)\n";
+            std::cout << "2. Refuza (Plateste el, Publicitate -1)\n";
+            int opt;
+            std::cin >> opt;
+
+            if (std::cin.fail()) {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                opt = 2;
+            }
+
+            if (opt == 1) {
+                profitTotal -= costComanda;
+                modificaPublicitate(1);
+                std::cout << "Ai acceptat. Influencerul a postat pe Instagram! Nivel Publicitate: " << nivelPublicitate << "\n";
+            } else {
+                modificaPublicitate(-1);
+                std::cout << "Ai refuzat. Influencerul a lasat un review prost. Nivel Publicitate: " << nivelPublicitate << "\n";
+            }
+        } else {
+            std::cout << "Influencerul nu a primit masa si a plecat nervos! (Publicitate -1)\n";
+            modificaPublicitate(-1);
+        }
+    }
+    else if (tipClient < 20) {
+        std::cout << "\n[!] EVENIMENT: Un CRITIC CULINAR se afla in acest grup!\n";
+        if (areLocLaMasa) {
+            if (rand() % 2 == 0) {
+                std::cout << "Criticul a fost IMPRESIONAT! (+200 RON Bonus + Publicitate)\n";
+                profitTotal += 200;
+                modificaPublicitate(1);
+            } else {
+                std::cout << "Criticul a fost DEZAMAGIT! (Publicitate -1)\n";
+                modificaPublicitate(-1);
+            }
+        } else {
+            std::cout << "Criticul nu a primit masa! (Publicitate -1)\n";
+            modificaPublicitate(-1);
+        }
+    }
+}
+
 void restaurant::gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& profitTotal) {
     actualizeazaMese();
 
@@ -89,7 +140,7 @@ void restaurant::gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& prof
             }
         }
         if(!gasit) {
-            comandaCurenta.push_back({p, 1});
+            comandaCurenta.emplace_back(p, 1);
         }
         costTotalComanda += p->getPretVanzare();
     }
@@ -110,7 +161,7 @@ void restaurant::gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& prof
     }
 
     if (!meseLibere) {
-        std::cout << "Nu sunt mese libere! Comanda pleaca...\n";
+        std::cout << "COMBAT: Nu sunt mese libere! Comanda pleaca...\n";
 
         int tipClient = rand() % 100;
         if (tipClient < 10) {
@@ -129,6 +180,11 @@ void restaurant::gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& prof
     std::cout << "Asignati masa (ID sau 0 refuz): ";
     std::cin >> idMasaAleasa;
 
+    if (std::cin.fail()) {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        idMasaAleasa = 0;
+    }
 
     if (idMasaAleasa == 0) {
         std::cout << "Comanda refuzata manual.\n";
@@ -276,6 +332,12 @@ void restaurant::aprovizionareManuala(stoc& Stoc, double& profitTotal) {
         int cant;
         std::cin >> cant;
 
+        if (std::cin.fail()) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            cant = 0;
+        }
+
         if(cant > 0) {
             double cost = cant * ing.getPretAchizitie();
             if(profitTotal >= cost) {
@@ -293,6 +355,12 @@ void restaurant::gestioneazaAprovizionare(stoc& Stoc, double& profitTotal) const
     std::cout << "\nAlegeti aprovizionarea:\n1. Automata\n2. Manuala\n3. Sari peste\nOptiune: ";
     int raspuns;
     std::cin >> raspuns;
+
+    if (std::cin.fail()) {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        raspuns = 3;
+    }
 
     if (raspuns == 1) aprovizionareAutomata(Stoc, profitTotal);
     else if (raspuns == 2) aprovizionareManuala(Stoc, profitTotal);
@@ -313,17 +381,20 @@ void restaurant::MeniuAdministrare(double& profitTotal, bool& jocActiv) {
         std::cout << "Alegeti: ";
         std::cin >> optiune;
 
+        if (std::cin.fail()) {
+             std::cin.clear();
+             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+             optiune = 0;
+             std::cout << "Input invalid.\n";
+             continue;
+        }
 
         if (optiune == 1) {
             if(profitTotal >= 200) {
                 profitTotal -= 200;
                 int idNou = Mese.size() + 1;
-                std::cout << "\nCate locuri in plus doresti la aceasta masa? (vine deja cu 4 locuri, un loc in plus costa 50 RON):";
-                int locuri;
-                std::cin >> locuri;
-                locuri+=4;
-                Mese.push_back(masa(idNou, locuri));
-                std::cout << "Masa " << idNou << " (Capacitate" << locuri << ") a fost adaugata!\n";
+                Mese.push_back(masa(idNou, 4));
+                std::cout << "Masa " << idNou << " (Capacitate 4) a fost adaugata!\n";
             } else std::cout << "Fonduri insuficiente!\n";
         }
         else if (optiune == 2) {
@@ -343,7 +414,7 @@ void restaurant::MeniuAdministrare(double& profitTotal, bool& jocActiv) {
         else if (optiune == 4) {
             if(profitTotal >= 100) {
                 profitTotal -= 100;
-                CurataRestaurant();
+                gradMurdarie = 0.0;
                 std::cout << "Restaurantul a fost curatat luna!\n";
             } else std::cout << "Fonduri insuficiente!\n";
         }
@@ -351,6 +422,7 @@ void restaurant::MeniuAdministrare(double& profitTotal, bool& jocActiv) {
             break;
         }
         else if (optiune == 6) {
+            stats.raportFinal();
             jocActiv = false;
             break;
         }
@@ -362,13 +434,15 @@ void restaurant::finalizeazaZiua(const stoc& Stoc, double& profitTotal) {
         profitTotal -= i.getSalariu();
     }
 
+    stats.adaugaZi(profitTotal, comenziFinalizate, comenziRefuzate, stele);
+
     if (eficienta <= 0.5) stele = 1;
     else if (eficienta <= 0.7) stele = 2;
     else if (eficienta <= 0.9) stele = 3;
     else stele = 5;
 
     std::cout << "Rating curent: " << stele << " Stele\n";
-    std::cout << "Profit ramas dupa plata salarilor: " << profitTotal << " RON\n";
+    std::cout << "Profit ramas dupa salarii: " << profitTotal << " RON\n";
 
     Stoc.SalveazaStoc("Informatii/StocActualizat.txt");
 }
@@ -402,6 +476,7 @@ void restaurant::ZiRestaurant(const meniu& Meniu, stoc& Stoc, double& profitTota
     if(profitTotal > 0) {
         MeniuAdministrare(profitTotal, jocActiv);
     } else {
+        stats.raportFinal();
         std::cout << "Nu puteti accesa magazinul (Fonduri insuficiente sau datorii).\n";
     }
 }
