@@ -25,6 +25,24 @@ bool stoc::Consuma(const std::string& nume, double cantitate) {
     throw EroareStocInsuficient(nume + " (Ingredient inexistent in inventar)");
 }
 
+void stoc::DegradeazaStocPerisabil(double procent) {
+    int contor = 0;
+    for(auto& ing : Stocul_Restaurantului) {
+        std::string nume = ing.getNume();
+        if(nume.find("Carne") != std::string::npos ||
+           nume.find("Oua") != std::string::npos ||
+           nume.find("Lapte") != std::string::npos ||
+           nume.find("Branza") != std::string::npos ||
+           nume.find("Unt") != std::string::npos) {
+
+            double cantitatePierduta = ing.getCantitate() * procent;
+            ing.scadeCantitate(cantitatePierduta);
+            contor++;
+        }
+    }
+    std::cout << "[SISTEM] " << contor << " tipuri de ingrediente perisabile au scazut cu " << (procent*100) << "%.\n";
+}
+
 void stoc::SalveazaStoc(const std::string& numeFisier) const {
     std::ofstream fout(numeFisier);
     if (!fout.is_open()) {

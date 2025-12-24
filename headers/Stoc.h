@@ -10,13 +10,10 @@ private:
     std::vector<ingredient> Stocul_Restaurantului;
 
 public:
-
     void AdaugaIngredienteInStoc(const ingredient& ingredient);
-
     std::vector<ingredient>& getStoc();
-
     bool Consuma(const std::string& nume, double cantitate);
-
+    void DegradeazaStocPerisabil(double procent);
     void SalveazaStoc(const std::string& numeFisier) const;
 
     friend std::ostream& operator<<(std::ostream& out, const stoc& s);

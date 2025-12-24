@@ -58,6 +58,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         headers/Masa.h
         src/Masa.cpp
         headers/Exceptii.h
+        headers/Evenimente.h
+        src/Evenimente.cpp
 )
 
 target_include_directories(${MAIN_EXECUTABLE_NAME} PRIVATE headers)
