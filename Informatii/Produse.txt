@@ -6,7 +6,6 @@ Snitel_Vienez Pesmet 0.1
 
 Ciorba_Pui Carne_Pui 0.2
 Ciorba_Pui Legume_Mix 0.2
-Ciorba_Pui Apa_Minerala 0.3
 Ciorba_Pui Sare 0.05
 
 Friptura_de_Vita Carne_Vita 0.3

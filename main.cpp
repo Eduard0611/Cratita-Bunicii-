@@ -83,28 +83,25 @@ int main() {
 
     std::cout << Meniu;
 
-    bool restaurantDeschis = true;
-    double profitTotal = 1000.0;
+    bool jocActiv = true;
+    double profitTotal = 1500.0;
     int ziuaCurenta = 1;
-    char continua;
 
-    std::cout << "\nDoriti sa deschideti restaurantul si sa primiti clienti? (y/n): ";
-    std::cin >> continua;
-    if (continua != 'y' && continua != 'Y') {
-        restaurantDeschis = false;
-    }
-    while (restaurantDeschis) {
+    std::cout << "\nBun venit! Apasati ENTER pentru a incepe simularea restaurantului...";
+    std::cin.get();
+
+    while (jocActiv) {
         Restaurant.ZiRestaurant(Meniu, Stoc, profitTotal, ziuaCurenta);
 
-        std::cout << "\nDoriti sa deschideti restaurantul ziua urmatoare si sa primiti clienti? (y/n): ";
-        std::cin >> continua;
-        if (continua != 'y' && continua != 'Y') {
-            restaurantDeschis = false;
+        if (profitTotal < 0) {
+            std::cout << "\n!!! FALIMENT !!!\n";
+            std::cout << "Ati ramas fara bani. Restaurantul a fost inchis de banca.\n";
+            std::cout << "Ati rezistat " << ziuaCurenta << " zile.\n";
+            jocActiv = false;
+        } else {
+            ziuaCurenta++;
         }
-        else ziuaCurenta++;
     }
-
-    std::cout << "\nRestaurantul s-a inchis definitiv.\nProfit total final: " << profitTotal << " RON\n";
 
     return 0;
 }
