@@ -318,8 +318,12 @@ void restaurant::MeniuAdministrare(double& profitTotal, bool& jocActiv) {
             if(profitTotal >= 200) {
                 profitTotal -= 200;
                 int idNou = Mese.size() + 1;
-                Mese.push_back(masa(idNou, 4));
-                std::cout << "Masa " << idNou << " (Capacitate 4) a fost adaugata!\n";
+                std::cout << "\nCate locuri in plus doresti la aceasta masa? (vine deja cu 4 locuri, un loc in plus costa 50 RON):";
+                int locuri;
+                std::cin >> locuri;
+                locuri+=4;
+                Mese.push_back(masa(idNou, locuri));
+                std::cout << "Masa " << idNou << " (Capacitate" << locuri << ") a fost adaugata!\n";
             } else std::cout << "Fonduri insuficiente!\n";
         }
         else if (optiune == 2) {
