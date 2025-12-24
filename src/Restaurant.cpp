@@ -235,7 +235,7 @@ void restaurant::aprovizionareAutomata(stoc& Stoc, double& profitTotal) const {
     }
 }
 
-void restaurant::aprovizionareManuala(stoc& Stoc, double& profitTotal) const {
+void restaurant::aprovizionareManuala(stoc& Stoc, double& profitTotal) {
     std::cout << "\n--- Aprovizionare Manuala ---\n";
     for (auto& ing : Stoc.getStoc()) {
         std::cout << ing.getNume() << " (Stoc: " << ing.getCantitate() << ") - Pret: " << ing.getPretAchizitie() << " RON. Cumperi? (0=Nu, >0=Cantitate): ";

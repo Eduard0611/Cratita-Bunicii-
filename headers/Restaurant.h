@@ -28,7 +28,7 @@ private:
     void incheieTranzactiile(const stoc& Stoc, double profitTotal);
 
     void aprovizionareAutomata(stoc& Stoc, double& profitTotal) const;
-    void aprovizionareManuala(stoc& Stoc, double& profitTotal) const;
+    static void aprovizionareManuala(stoc& Stoc, double& profitTotal);
     void gestioneazaAprovizionare(stoc& Stoc, double& profitTotal) const;
 
     void finalizeazaZiua(const stoc& Stoc, double& profitTotal);
