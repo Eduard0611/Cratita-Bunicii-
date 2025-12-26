@@ -1,6 +1,7 @@
 #include "FileManager.h"
 #include "Exceptii.h"
 #include "Produs.h"
+#include "Angajat.h"
 #include <fstream>
 #include <iostream>
 
@@ -70,7 +71,11 @@ void FileManager::IncarcaAngajati(restaurant& R, const std::string& path) {
     std::string numeAngajat, functie;
     double salariu;
     while (fin >> numeAngajat >> functie >> salariu) {
-        R.Angajeaza(angajat(numeAngajat, functie, salariu));
+        if (functie == "Bucatar") {
+            R.Angajeaza(new bucatar(numeAngajat, salariu));
+        } else {
+            R.Angajeaza(new ospatar(numeAngajat, salariu));
+        }
     }
     fin.close();
 }

@@ -1,20 +1,33 @@
 #pragma once
-
 #include <string>
 #include <iostream>
 
 class angajat {
-private:
+protected:
     std::string nume;
-    std::string functie;
     double salariu;
 
 public:
+    angajat(std::string nume, double salariu);
+    virtual ~angajat() = default;
 
-    angajat(std::string nume, std::string functie, double salariu);
+    const std::string& getNume() const;
+    double getSalariu() const;
 
-    [[nodiscard]] const std::string& getNume() const;
-    [[nodiscard]] double getSalariu() const;
+    virtual std::string getFunctie() const = 0;
+    virtual void afisare(std::ostream& out) const;
 
     friend std::ostream& operator<<(std::ostream& out, const angajat& i);
+};
+
+class bucatar : public angajat {
+public:
+    bucatar(std::string nume, double salariu);
+    std::string getFunctie() const override;
+};
+
+class ospatar : public angajat {
+public:
+    ospatar(std::string nume, double salariu);
+    std::string getFunctie() const override;
 };

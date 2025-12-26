@@ -12,7 +12,7 @@
 class restaurant {
 private:
     std::string nume;
-    std::vector<angajat> Angajati;
+    std::vector<angajat*> Angajati;
     std::vector<masa> Mese;
 
     Statistica stats;
@@ -40,10 +40,14 @@ private:
 
     void afiseazaRaportFinal() const;
 
+    int getNrBucatari() const;
+    int getNrOspatari() const;
+
 public:
     explicit restaurant(std::string nume);
+    ~restaurant();
 
-    void Angajeaza(const angajat& x);
+    void Angajeaza(angajat* x);
     void AdaugaMasa(const masa& m);
 
     [[nodiscard]] double getSalariiAngajati() const;
