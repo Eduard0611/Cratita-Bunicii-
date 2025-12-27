@@ -77,7 +77,7 @@ void ManagerRealizari::AfiseazaStatus() const {
         if(r.deblocata) {
             std::cout << "[DEBLOCAT] " << r.titlu << "\n";
         } else {
-            std::cout << "[LOCKED]   " << r.titlu << " (???) \n";
+            std::cout << "[LOCKED]   " << r.titlu << " ( ??? ) \n";
         }
     }
     std::cout << "======================================\n";

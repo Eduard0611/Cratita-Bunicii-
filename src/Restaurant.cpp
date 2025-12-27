@@ -333,6 +333,7 @@ void restaurant::afiseazaRaportFinal() const {
     stats.raportFinal();
     std::cout << "============================================\n";
     achievements.AfiseazaStatus();
+    std::cout << "Scor Total Realizari: " << achievements.getScorRealizari() << "\n";
 }
 
 void restaurant::MeniuAdministrare(double& profitTotal, bool& jocActiv) {
