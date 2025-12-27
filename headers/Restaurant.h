@@ -8,6 +8,7 @@
 #include "Meniu.h"
 #include "Masa.h"
 #include "Statistica.h"
+#include "Realizari.h"
 
 class restaurant {
 private:
@@ -16,6 +17,7 @@ private:
     std::vector<masa> Mese;
 
     Statistica stats;
+    ManagerRealizari achievements;
 
     int comenziFinalizate = 0;
     int comenziRefuzate = 0;
@@ -35,7 +37,7 @@ private:
     static void aprovizionareManuala(stoc& Stoc, double& profitTotal);
     void gestioneazaAprovizionare(stoc& Stoc, double& profitTotal) const;
 
-    void finalizeazaZiua(const stoc& Stoc, double& profitTotal);
+    void finalizeazaZiua(const stoc& Stoc, double& profitTotal, int ziuaCurenta);
     void MeniuAdministrare(double& profitTotal, bool& jocActiv);
 
     void afiseazaRaportFinal() const;

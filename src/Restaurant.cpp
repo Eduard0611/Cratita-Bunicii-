@@ -241,10 +241,8 @@ void restaurant::incheieTranzactiile(const stoc& Stoc, double profitTotal) {
     else
         eficienta = 0.0;
 
-    // [MODIFICAT] Afisam intai stocul
     std::cout << "\n--- Stoc ramas la finalul zilei ---\n" << Stoc;
 
-    // [MODIFICAT] Apoi incepem rezumatul
     std::cout << "\n--- Rezumatul Zilei ---\n";
     std::cout << "Eficienta: " << eficienta * 100 << "%\n";
     std::cout << "Bani inainte de salarii: " << profitTotal << " RON\n";
@@ -334,6 +332,7 @@ void restaurant::afiseazaRaportFinal() const {
     std::cout << "\n\n======== RAPORT FINAL DE ACTIVITATE ========\n";
     stats.raportFinal();
     std::cout << "============================================\n";
+    achievements.AfiseazaStatus();
 }
 
 void restaurant::MeniuAdministrare(double& profitTotal, bool& jocActiv) {
@@ -351,6 +350,7 @@ void restaurant::MeniuAdministrare(double& profitTotal, bool& jocActiv) {
         std::cout << "6. Angajeaza Ospatar (Cost: 300 RON, Salariu: 150)\n";
         std::cout << "7. Start Ziua Urmatoare\n";
         std::cout << "8. Iesire din Joc\n";
+        std::cout << "9. Vezi Realizari\n";
         std::cout << "Alegeti: ";
         std::cin >> optiune;
 
@@ -417,10 +417,13 @@ void restaurant::MeniuAdministrare(double& profitTotal, bool& jocActiv) {
             jocActiv = false;
             break;
         }
+        else if (optiune == 9) {
+            achievements.AfiseazaStatus();
+        }
     }
 }
 
-void restaurant::finalizeazaZiua(const stoc& Stoc, double& profitTotal) {
+void restaurant::finalizeazaZiua(const stoc& Stoc, double& profitTotal, int ziuaCurenta) {
     for (const auto* i : Angajati) {
         profitTotal -= i->getSalariu();
     }
@@ -432,9 +435,10 @@ void restaurant::finalizeazaZiua(const stoc& Stoc, double& profitTotal) {
     else if (eficienta <= 0.9) stele = 3;
     else stele = 5;
 
-    // [MODIFICAT] Aceste linii apar acum in continuare la Rezumatul Zilei
     std::cout << "Rating curent: " << stele << " Stele\n";
-    std::cout << "Profit ramas dupa plata salarilor: " << profitTotal << " RON\n";
+    std::cout << "Profit ramas dupa salarii: " << profitTotal << " RON\n";
+
+    achievements.VerificaProgres(profitTotal, ziuaCurenta, getNrBucatari(), nivelDecor, stele);
 
     Stoc.SalveazaStoc("Informatii/StocActualizat.txt");
 }
@@ -462,7 +466,7 @@ void restaurant::ZiRestaurant(const meniu& Meniu, stoc& Stoc, double& profitTota
     }
 
     incheieTranzactiile(Stoc, profitTotal);
-    finalizeazaZiua(Stoc, profitTotal);
+    finalizeazaZiua(Stoc, profitTotal, ziuaCurenta);
     gestioneazaAprovizionare(Stoc, profitTotal);
 
     if(profitTotal > 0) {

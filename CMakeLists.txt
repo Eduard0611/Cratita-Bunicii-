@@ -63,6 +63,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         headers/Statistica.h
         headers/FileManager.h
         src/FileManager.cpp
+        headers/Realizari.h
+        src/Realizari.cpp
 )
 
 target_include_directories(${MAIN_EXECUTABLE_NAME} PRIVATE headers)
