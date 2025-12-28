@@ -47,7 +47,17 @@ produs* meniu::CautaProdus(const std::string& nume) {
 std::ostream& operator<<(std::ostream& out, const meniu& m) {
     out << "\n====================== MENIU ======================\n";
 
-    out << "\n--------------------- MANCARE ---------------------\n";
+    out << "\n--------------------- CIORBE ----------------------\n";
+    bool gasitCiorba = false;
+    for (const auto* p : m.produse) {
+        if (dynamic_cast<const ciorba*>(p) != nullptr) {
+            out << *p << "\n";
+            gasitCiorba = true;
+        }
+    }
+    if (!gasitCiorba) out << "   (Momentan nu servim ciorbe)\n";
+
+    out << "\n--------------------- FELURI PRICIPALE ---------------------\n";
     bool gasitMancare = false;
     for (const auto* p : m.produse) {
         if (dynamic_cast<const mancare*>(p) != nullptr) {
@@ -55,7 +65,7 @@ std::ostream& operator<<(std::ostream& out, const meniu& m) {
             gasitMancare = true;
         }
     }
-    if (!gasitMancare) out << "   (Momentan nu servim mancare)\n";
+    if (!gasitMancare) out << "   (Momentan nu servim feluri pricipale)\n";
 
     out << "\n--------------------- BAUTURI ---------------------\n";
     bool gasitBautura = false;

@@ -58,3 +58,13 @@ public:
     desert(std::string nume, double pret, bool contineZahar = true);
     [[nodiscard]]produs* clone() const override;
 };
+
+class ciorba : public produs {
+private:
+    bool cuArdei;
+protected:
+    void afisare(std::ostream& out) const override;
+public:
+    ciorba(std::string nume, double pret, bool cuArdei = true);
+    [[nodiscard]] produs* clone() const override;
+};

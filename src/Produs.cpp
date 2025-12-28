@@ -65,3 +65,13 @@ void desert::afisare(std::ostream& out) const {
     produs::afisare(out);
     out << " [Tip: Desert" << (contineZahar ? " cu Zahar" : " fara Zahar") << "]";
 }
+
+ciorba::ciorba(std::string nume, double pret, bool cuArdei)
+    : produs(std::move(nume), pret), cuArdei(cuArdei) {}
+
+produs* ciorba::clone() const { return new ciorba(*this); }
+
+void ciorba::afisare(std::ostream& out) const {
+    produs::afisare(out);
+    out << " [Tip: Ciorba/Supa" << (cuArdei ? " + Ardei Iute" : "") << "]";
+}

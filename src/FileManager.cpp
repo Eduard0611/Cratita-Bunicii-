@@ -34,12 +34,15 @@ void FileManager::IncarcaMeniu(meniu& M, const std::string& path) {
     std::string cuv;
     double pret;
     while (fin >> cuv >> pret) {
-        if (cuv.find("Vin") != std::string::npos || cuv.find("Bere") != std::string::npos || cuv.find("Suc") != std::string::npos) {
+        if (cuv.find("Vin") != std::string::npos || cuv.find("Bere") != std::string::npos || cuv.find("Cola") != std::string::npos) {
             double alcool = (cuv.find("Suc") != std::string::npos) ? 0.0 : 12.0;
             M.AdaugaProdus(new bautura(cuv, pret, alcool));
         }
         else if (cuv.find("Papanasi") != std::string::npos || cuv.find("Clatite") != std::string::npos || cuv.find("Lava") != std::string::npos) {
             M.AdaugaProdus(new desert(cuv, pret, true));
+        }
+        else if (cuv.find("Ciorba") != std::string::npos || cuv.find("Supa") != std::string::npos) {
+            M.AdaugaProdus(new ciorba(cuv, pret, true));
         }
         else {
             M.AdaugaProdus(new mancare(cuv, pret));
