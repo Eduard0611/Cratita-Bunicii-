@@ -22,5 +22,5 @@ public:
 
     void VerificaProgres(double bani, int zile, int bucatari, int decor, int stele);
     void AfiseazaStatus() const;
-    int getScorRealizari() const;
+    [[nodiscard]]int getScorRealizari() const;
 };

@@ -42,8 +42,8 @@ private:
 
     void afiseazaRaportFinal() const;
 
-    int getNrBucatari() const;
-    int getNrOspatari() const;
+    [[nodiscard]]int getNrBucatari() const;
+    [[nodiscard]]int getNrOspatari() const;
 
 public:
     explicit restaurant(std::string nume);

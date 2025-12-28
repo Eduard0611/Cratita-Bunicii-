@@ -1,6 +1,5 @@
 #include "Realizari.h"
 #include <iostream>
-#include <utility>
 
 ManagerRealizari::ManagerRealizari() : realizariDeblocateTotal(0) {
     listaRealizari.emplace_back("Inceput Promitator", "Strange primii tai 2000 RON.");

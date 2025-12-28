@@ -368,12 +368,29 @@ void restaurant::MeniuAdministrare(double& profitTotal, bool& jocActiv) {
             if (static_cast<int>(Mese.size()) >= limitaMese) {
                 std::cout << "Nu aveti suficienti ospatari! (Max 2 mese per ospatar)\n";
             }
-            else if(profitTotal >= 200) {
-                profitTotal -= 200;
-                int idNou = Mese.size() + 1;
-                Mese.push_back(masa(idNou, 4));
-                std::cout << "Masa " << idNou << " (Capacitate 4) a fost adaugata!\n";
-            } else std::cout << "Fonduri insuficiente!\n";
+            else {
+                std::cout << "Cate locuri doriti la masa? (1 loc = 50 RON): ";
+                int locuri;
+                std::cin >> locuri;
+
+                if (std::cin.fail() || locuri <= 0) {
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << "Numar de locuri invalid!\n";
+                }
+                else {
+                    double costMasa = locuri * 50.0;
+
+                    if (profitTotal >= costMasa) {
+                        profitTotal -= costMasa;
+                        int idNou = Mese.size() + 1;
+                        Mese.emplace_back(idNou, locuri);
+                        std::cout << "Masa " << idNou << " (Capacitate: " << locuri << ") a fost cumparata cu " << costMasa << " RON!\n";
+                    } else {
+                        std::cout << "Fonduri insuficiente! Ai nevoie de " << costMasa << " RON.\n";
+                    }
+                }
+            }
         }
         else if (optiune == 2) {
             if(profitTotal >= 300) {
