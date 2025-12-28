@@ -1,7 +1,9 @@
 # Cratița Bunicii - Simulator de Restaurant
 
-**Cratița Bunicii** este un simulator de restaurant în C++ care te pune în rolul managerului unui restaurant. Rolul este să-l ferești de faliment și să-l duci pe culmile succesului.
 ## Descriere
+
+**Cratița Bunicii** este un simulator de restaurant în C++ care te pune în rolul managerului unui restaurant. Rolul este să-l ferești de faliment și să-l duci pe culmile succesului.
+
 
 ## Experiența de Joc
 
