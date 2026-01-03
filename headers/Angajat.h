@@ -14,7 +14,7 @@ public:
 
     const std::string& getNume() const;
     double getSalariu() const;
-    std::string getFunctie() const;
+    const std::string& getFunctie() const;
 
     virtual angajat* clone() const;
     virtual void afisare(std::ostream& out) const;

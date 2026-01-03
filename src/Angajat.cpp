@@ -12,7 +12,7 @@ double angajat::getSalariu() const {
     return salariu;
 }
 
-std::string angajat::getFunctie() const {
+const std::string& angajat::getFunctie() const {
     return functie;
 }
 

@@ -210,7 +210,7 @@ void restaurant::gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& prof
     if(comandaCurenta.empty()) return;
 
     try {
-        masa* m = CautaSiOcupaMasa(numarClienti, Stoc, comandaCurenta, profitTotal, costTotalComanda);
+        const masa* m = CautaSiOcupaMasa(numarClienti, Stoc, comandaCurenta, profitTotal, costTotalComanda);
         if (m) {
             comenziFinalizate++;
             TriggerEvenimentClient(Stoc, profitTotal, costTotalComanda, true);
