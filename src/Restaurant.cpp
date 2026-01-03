@@ -25,7 +25,7 @@ void restaurant::AdaugaMasa(const masa& m) {
 int restaurant::getNrBucatari() const {
     int count = 0;
     for (const auto* a : Angajati) {
-        if (dynamic_cast<const bucatar*>(a)) count++;
+        if (a->getFunctie() == "Bucatar") count++;
     }
     return count;
 }
@@ -33,7 +33,7 @@ int restaurant::getNrBucatari() const {
 int restaurant::getNrOspatari() const {
     int count = 0;
     for (const auto* a : Angajati) {
-        if (dynamic_cast<const ospatar*>(a)) count++;
+        if (a->getFunctie() == "Ospatar") count++;
     }
     return count;
 }
@@ -416,14 +416,14 @@ void restaurant::MeniuAdministrare(double& profitTotal, bool& jocActiv) {
         else if (optiune == 5) {
             if(profitTotal >= 500) {
                 profitTotal -= 500;
-                Angajeaza(new bucatar("Bucatar Nou", 250));
+                Angajeaza(new angajat("Bucatar Nou", "Bucatar", 250));
                 std::cout << "Bucatar angajat! Pretul comenzilor creste.\n";
             } else std::cout << "Fonduri insuficiente!\n";
         }
         else if (optiune == 6) {
             if(profitTotal >= 300) {
                 profitTotal -= 300;
-                Angajeaza(new ospatar("Ospatar Nou", 150));
+                Angajeaza(new angajat("Ospatar Nou", "Ospatar", 150));
                 std::cout << "Ospatar angajat! Puteti cumpara mese noi.\n";
             } else std::cout << "Fonduri insuficiente!\n";
         }

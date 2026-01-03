@@ -73,12 +73,9 @@ void FileManager::IncarcaAngajati(restaurant& R, const std::string& path) {
     }
     std::string numeAngajat, functie;
     double salariu;
+
     while (fin >> numeAngajat >> functie >> salariu) {
-        if (functie == "Bucatar") {
-            R.Angajeaza(new bucatar(numeAngajat, salariu));
-        } else {
-            R.Angajeaza(new ospatar(numeAngajat, salariu));
-        }
+        R.Angajeaza(new angajat(numeAngajat, functie, salariu));
     }
     fin.close();
 }

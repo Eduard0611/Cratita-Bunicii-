@@ -5,29 +5,19 @@
 class angajat {
 protected:
     std::string nume;
+    std::string functie;
     double salariu;
 
 public:
-    angajat(std::string nume, double salariu);
+    angajat(std::string nume, std::string functie, double salariu);
     virtual ~angajat() = default;
 
     const std::string& getNume() const;
     double getSalariu() const;
+    std::string getFunctie() const;
 
-    virtual std::string getFunctie() const = 0;
+    virtual angajat* clone() const;
     virtual void afisare(std::ostream& out) const;
 
     friend std::ostream& operator<<(std::ostream& out, const angajat& i);
-};
-
-class bucatar : public angajat {
-public:
-    bucatar(std::string nume, double salariu);
-    std::string getFunctie() const override;
-};
-
-class ospatar : public angajat {
-public:
-    ospatar(std::string nume, double salariu);
-    std::string getFunctie() const override;
 };

@@ -16,6 +16,7 @@ public:
     produs(std::string nume, double pret);
     virtual ~produs();
     [[nodiscard]] virtual produs* clone() const = 0;
+    [[nodiscard]] virtual std::string getCategorie() const = 0;
 
     [[nodiscard]] virtual double getPretVanzare() const;
 
@@ -33,7 +34,8 @@ protected:
     void afisare(std::ostream& out) const override;
 public:
     mancare(std::string nume, double pret, bool dePost = false);
-    [[nodiscard]]produs* clone() const override;
+    [[nodiscard]] produs* clone() const override;
+    [[nodiscard]] std::string getCategorie() const override;
 };
 
 class bautura : public produs {
@@ -43,10 +45,11 @@ protected:
     void afisare(std::ostream& out) const override;
 public:
     bautura(std::string nume, double pret, double volumAlcool);
-    [[nodiscard]]produs* clone() const override;
+    [[nodiscard]] produs* clone() const override;
+    [[nodiscard]] std::string getCategorie() const override;
 
-    [[nodiscard]]double getPretVanzare() const override;
-    [[nodiscard]]double getVolumAlcool() const;
+    [[nodiscard]] double getPretVanzare() const override;
+    [[nodiscard]] double getVolumAlcool() const;
 };
 
 class desert : public produs {
@@ -56,7 +59,8 @@ protected:
     void afisare(std::ostream& out) const override;
 public:
     desert(std::string nume, double pret, bool contineZahar = true);
-    [[nodiscard]]produs* clone() const override;
+    [[nodiscard]] produs* clone() const override;
+    [[nodiscard]] std::string getCategorie() const override;
 };
 
 class ciorba : public produs {
@@ -67,4 +71,5 @@ protected:
 public:
     ciorba(std::string nume, double pret, bool cuArdei = true);
     [[nodiscard]] produs* clone() const override;
+    [[nodiscard]] std::string getCategorie() const override;
 };

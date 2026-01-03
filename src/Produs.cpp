@@ -34,6 +34,8 @@ mancare::mancare(std::string nume, double pret, bool dePost)
 
 produs* mancare::clone() const { return new mancare(*this); }
 
+std::string mancare::getCategorie() const { return "FELURI PRINCIPALE"; }
+
 void mancare::afisare(std::ostream& out) const {
     produs::afisare(out);
     out << " [Tip: Mancare" << (dePost ? " de Post" : "") << "]";
@@ -43,6 +45,8 @@ bautura::bautura(std::string nume, double pret, double volumAlcool)
     : produs(std::move(nume), pret), volumAlcool(volumAlcool) {}
 
 produs* bautura::clone() const { return new bautura(*this); }
+
+std::string bautura::getCategorie() const { return "BAUTURI"; }
 
 void bautura::afisare(std::ostream& out) const {
     produs::afisare(out);
@@ -61,6 +65,8 @@ desert::desert(std::string nume, double pret, bool contineZahar)
 
 produs* desert::clone() const { return new desert(*this); }
 
+std::string desert::getCategorie() const { return "DESERT"; }
+
 void desert::afisare(std::ostream& out) const {
     produs::afisare(out);
     out << " [Tip: Desert" << (contineZahar ? " cu Zahar" : " fara Zahar") << "]";
@@ -70,6 +76,8 @@ ciorba::ciorba(std::string nume, double pret, bool cuArdei)
     : produs(std::move(nume), pret), cuArdei(cuArdei) {}
 
 produs* ciorba::clone() const { return new ciorba(*this); }
+
+std::string ciorba::getCategorie() const { return "CIORBE"; }
 
 void ciorba::afisare(std::ostream& out) const {
     produs::afisare(out);

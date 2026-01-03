@@ -1,4 +1,6 @@
 #include "Meniu.h"
+#include <vector>
+#include <string>
 
 void meniu::sterge() {
     for (auto* p : produse) delete p;
@@ -47,45 +49,21 @@ produs* meniu::CautaProdus(const std::string& nume) {
 std::ostream& operator<<(std::ostream& out, const meniu& m) {
     out << "\n====================== MENIU ======================\n";
 
-    out << "\n--------------------- CIORBE ----------------------\n";
-    bool gasitCiorba = false;
-    for (const auto* p : m.produse) {
-        if (dynamic_cast<const ciorba*>(p) != nullptr) {
-            out << *p << "\n";
-            gasitCiorba = true;
-        }
-    }
-    if (!gasitCiorba) out << "   (Momentan nu servim ciorbe)\n";
+    std::vector<std::string> categorii = {"CIORBE", "FELURI PRINCIPALE", "BAUTURI", "DESERT"};
 
-    out << "\n--------------------- FELURI PRICIPALE ---------------------\n";
-    bool gasitMancare = false;
-    for (const auto* p : m.produse) {
-        if (dynamic_cast<const mancare*>(p) != nullptr) {
-            out << *p << "\n";
-            gasitMancare = true;
+    for (const auto& cat : categorii) {
+        out << "\n--------------------- " << cat << " ---------------------\n";
+        bool gasit = false;
+        for (const auto* p : m.produse) {
+            if (p->getCategorie() == cat) {
+                out << *p << "\n";
+                gasit = true;
+            }
+        }
+        if (!gasit) {
+            out << "   (Momentan nu servim produse din categoria " << cat << ")\n";
         }
     }
-    if (!gasitMancare) out << "   (Momentan nu servim feluri pricipale)\n";
-
-    out << "\n--------------------- BAUTURI ---------------------\n";
-    bool gasitBautura = false;
-    for (const auto* p : m.produse) {
-        if (dynamic_cast<const bautura*>(p) != nullptr) {
-            out << *p << "\n";
-            gasitBautura = true;
-        }
-    }
-    if (!gasitBautura) out << "   (Momentan nu servim bauturi)\n";
-
-    out << "\n--------------------- DESERT ----------------------\n";
-    bool gasitDesert = false;
-    for (const auto* p : m.produse) {
-        if (dynamic_cast<const desert*>(p) != nullptr) {
-            out << *p << "\n";
-            gasitDesert = true;
-        }
-    }
-    if (!gasitDesert) out << "   (Momentan nu servim desert)\n";
 
     out << "\n===================================================\n";
     return out;
