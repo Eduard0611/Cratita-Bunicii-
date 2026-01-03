@@ -5,33 +5,41 @@
 
 class restaurant;
 
+struct ContextEveniment {
+    restaurant& r;
+    stoc& s;
+    double& profitTotal;
+    double costComanda;
+    bool areLocLaMasa;
+};
+
 class Eveniment {
 public:
     virtual ~Eveniment() = default;
-    virtual void Executa(restaurant& r, stoc& s, double& profitTotal, double costComanda = 0.0, bool areLocLaMasa = false) = 0;
+    virtual void Executa(ContextEveniment& ctx) = 0;
     virtual std::string getNume() const = 0;
 };
 
 class InspectieSanitara : public Eveniment {
 public:
     std::string getNume() const override;
-    void Executa(restaurant& r, stoc& s, double& profitTotal, double costComanda = 0.0, bool areLocLaMasa = false) override;
+    void Executa(ContextEveniment& ctx) override;
 };
 
 class PanaCurent : public Eveniment {
 public:
     std::string getNume() const override;
-    void Executa(restaurant& r, stoc& s, double& profitTotal, double costComanda = 0.0, bool areLocLaMasa = false) override;
+    void Executa(ContextEveniment& ctx) override;
 };
 
 class Influencer : public Eveniment {
 public:
     std::string getNume() const override;
-    void Executa(restaurant& r, stoc& s, double& profitTotal, double costComanda = 0.0, bool areLocLaMasa = false) override;
+    void Executa(ContextEveniment& ctx) override;
 };
 
 class CriticCulinar : public Eveniment {
 public:
     std::string getNume() const override;
-    void Executa(restaurant& r, stoc& s, double& profitTotal, double costComanda = 0.0, bool areLocLaMasa = false) override;
+    void Executa(ContextEveniment& ctx) override;
 };

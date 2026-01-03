@@ -30,6 +30,11 @@ private:
 
     void incepeZiua(int ziuaCurenta, stoc& Stoc, double& profitTotal);
     void actualizeazaMese();
+
+    void GenerareComanda(const meniu& Meniu, int& numarClienti, std::vector<std::pair<produs*, int>>& comandaCurenta, double& costTotalComanda) const;
+    masa* CautaSiOcupaMasa(int numarClienti, stoc& Stoc, const std::vector<std::pair<produs*, int>>& comandaCurenta, double& profitTotal, double costTotalComanda);
+    void TriggerEvenimentClient(stoc& Stoc, double& profitTotal, double costTotalComanda, bool areLocLaMasa);
+
     void gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& profitTotal);
     void incheieTranzactiile(const stoc& Stoc, double profitTotal);
 

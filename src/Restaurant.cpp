@@ -52,12 +52,14 @@ void restaurant::incepeZiua(int ziuaCurenta, stoc& Stoc, double& profitTotal) {
     std::cout << "==========================================\n";
 
     int sansaEveniment = rand() % 100;
+    ContextEveniment ctx{*this, Stoc, profitTotal, 0.0, false};
+
     if (sansaEveniment < 20) {
         InspectieSanitara inspectie;
-        inspectie.Executa(*this, Stoc, profitTotal);
+        inspectie.Executa(ctx);
     } else if (sansaEveniment < 35) {
         PanaCurent pana;
-        pana.Executa(*this, Stoc, profitTotal);
+        pana.Executa(ctx);
     }
 
     std::cout << "\n--- Stoc disponibil ---\n";
@@ -85,20 +87,13 @@ void restaurant::actualizeazaMese() {
     if(SauEliberatMese) std::cout << "\n";
 }
 
-void restaurant::gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& profitTotal) {
-    actualizeazaMese();
-
-    int numarClienti = 1 + rand() % 8;
-    std::vector<std::pair<produs*, int>> comandaCurenta;
+void restaurant::GenerareComanda(const meniu& Meniu, int& numarClienti, std::vector<std::pair<produs*, int>>& comandaCurenta, double& costTotalComanda) const {
     const auto &produseDisponibile = Meniu.getProduse();
+    if (produseDisponibile.empty()) return;
 
-    if (produseDisponibile.empty()) {
-        std::cout << "Nu exista produse in meniu!\n";
-        return;
-    }
-
+    numarClienti = 1 + rand() % 8;
     int numarProduseComandate = numarClienti + (rand() % (numarClienti + 2));
-    double costTotalComanda = 0.0;
+    costTotalComanda = 0.0;
 
     std::cout << "\n>>> COMANDA NOUA IN ASTEPTARE >>>\n";
     std::cout << "Clienti la usa: " << numarClienti << "\n";
@@ -123,7 +118,6 @@ void restaurant::gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& prof
 
     double bonusChef = costTotalComanda * (getNrBucatari() * 0.05);
     costTotalComanda += bonusChef;
-
     double bonusDecor = costTotalComanda * (nivelDecor * 0.05);
     costTotalComanda += bonusDecor;
 
@@ -131,7 +125,9 @@ void restaurant::gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& prof
         std::cout << " - " << item.second << " x " << item.first->getNume() << "\n";
     }
     std::cout << "Valoare comanda: " << costTotalComanda << " RON (Bonus Chef: " << bonusChef << ")\n";
+}
 
+masa* restaurant::CautaSiOcupaMasa(int numarClienti, stoc& Stoc, const std::vector<std::pair<produs*, int>>& comandaCurenta, double& profitTotal, double costTotalComanda) {
     std::cout << "\nStatus Mese:\n";
     bool meseLibere = false;
     for(const auto& m : Mese) {
@@ -141,18 +137,7 @@ void restaurant::gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& prof
 
     if (!meseLibere) {
         std::cout << "COMBAT: Nu sunt mese libere! Comanda pleaca...\n";
-
-        int tipClient = rand() % 100;
-        if (tipClient < 10) {
-            Influencer inf;
-            inf.Executa(*this, Stoc, profitTotal, costTotalComanda, false);
-        } else if (tipClient < 20) {
-            CriticCulinar critic;
-            critic.Executa(*this, Stoc, profitTotal, costTotalComanda, false);
-        }
-
-        comenziRefuzate++;
-        return;
+        return nullptr;
     }
 
     int idMasaAleasa;
@@ -167,66 +152,72 @@ void restaurant::gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& prof
 
     if (idMasaAleasa == 0) {
         std::cout << "Comanda refuzata manual.\n";
-
-        int tipClient = rand() % 100;
-        if (tipClient < 10) {
-            Influencer inf;
-            inf.Executa(*this, Stoc, profitTotal, costTotalComanda, false);
-        } else if (tipClient < 20) {
-            CriticCulinar critic;
-            critic.Executa(*this, Stoc, profitTotal, costTotalComanda, false);
-        }
-
-        comenziRefuzate++;
-        return;
+        return nullptr;
     }
 
+    masa* masaGasita = nullptr;
+    for (auto& m : Mese) {
+        if (m.getId() == idMasaAleasa) {
+            masaGasita = &m;
+            break;
+        }
+    }
+
+    if (!masaGasita) throw EroareComandaMasa("ID-ul mesei nu exista in restaurant!");
+    if (masaGasita->isOcupata()) throw EroareComandaMasa("Masa selectata este deja OCUPATA!");
+    if (masaGasita->getCapacitate() < numarClienti) throw EroareComandaMasa("Capacitate insuficienta!");
+
+    std::map<std::string, double> necesarTotal;
+    for(const auto& item : comandaCurenta) {
+        for(const auto& ing : item.first->getIngrediente()) {
+            necesarTotal[ing.nume] += ing.cantitate * item.second;
+        }
+    }
+
+    Stoc.VerificaSiConsuma(necesarTotal);
+
+    int durataOcupare = 2 + (rand() % 3);
+    masaGasita->setOcupata(true, durataOcupare);
+    profitTotal += costTotalComanda;
+    CresteMurdarie(5.0);
+
+    std::cout << "Succes! Masa " << masaGasita->getId() << " ocupata pentru " << durataOcupare << " ture.\n";
+    return masaGasita;
+}
+
+void restaurant::TriggerEvenimentClient(stoc& Stoc, double& profitTotal, double costTotalComanda, bool areLocLaMasa) {
+    int tipClient = rand() % 100;
+    ContextEveniment ctx{*this, Stoc, profitTotal, costTotalComanda, areLocLaMasa};
+
+    if (tipClient < 10) {
+        Influencer inf;
+        inf.Executa(ctx);
+    } else if (tipClient < 20) {
+        CriticCulinar critic;
+        critic.Executa(ctx);
+    }
+}
+
+void restaurant::gestioneazaComanda(const meniu& Meniu, stoc& Stoc, double& profitTotal) {
+    actualizeazaMese();
+
+    int numarClienti = 0;
+    std::vector<std::pair<produs*, int>> comandaCurenta;
+    double costTotalComanda = 0.0;
+
+    GenerareComanda(Meniu, numarClienti, comandaCurenta, costTotalComanda);
+
+    if(comandaCurenta.empty()) return;
+
     try {
-        masa* masaGasita = nullptr;
-        for (auto& m : Mese) {
-            if (m.getId() == idMasaAleasa) {
-                masaGasita = &m;
-                break;
-            }
+        masa* m = CautaSiOcupaMasa(numarClienti, Stoc, comandaCurenta, profitTotal, costTotalComanda);
+        if (m) {
+            comenziFinalizate++;
+            TriggerEvenimentClient(Stoc, profitTotal, costTotalComanda, true);
+        } else {
+            comenziRefuzate++;
+            TriggerEvenimentClient(Stoc, profitTotal, costTotalComanda, false);
         }
-
-        if (!masaGasita) {
-            throw EroareComandaMasa("ID-ul mesei nu exista in restaurant!");
-        }
-
-        if (masaGasita->isOcupata()) {
-            throw EroareComandaMasa("Masa selectata este deja OCUPATA!");
-        }
-        if (masaGasita->getCapacitate() < numarClienti) {
-            throw EroareComandaMasa("Capacitate insuficienta (Clienti: " + std::to_string(numarClienti) + ", Locuri: " + std::to_string(masaGasita->getCapacitate()) + ")");
-        }
-
-        std::map<std::string, double> necesarTotal;
-        for(const auto& item : comandaCurenta) {
-            for(const auto& ing : item.first->getIngrediente()) {
-                necesarTotal[ing.nume] += ing.cantitate * item.second;
-            }
-        }
-
-        Stoc.VerificaSiConsuma(necesarTotal);
-
-        int durataOcupare = 2 + (rand() % 3);
-        masaGasita->setOcupata(true, durataOcupare);
-        profitTotal += costTotalComanda;
-        comenziFinalizate++;
-        CresteMurdarie(5.0);
-
-        std::cout << "Succes! Masa " << masaGasita->getId() << " ocupata pentru " << durataOcupare << " ture.\n";
-
-        int tipClient = rand() % 100;
-        if (tipClient < 10) {
-            Influencer inf;
-            inf.Executa(*this, Stoc, profitTotal, costTotalComanda, true);
-        } else if (tipClient < 20) {
-            CriticCulinar critic;
-            critic.Executa(*this, Stoc, profitTotal, costTotalComanda, true);
-        }
-
     } catch (const EroareRestaurant& e) {
         std::cout << "\n[!] COMANDA ANULATA: " << e.what() << "\n";
         comenziRefuzate++;
