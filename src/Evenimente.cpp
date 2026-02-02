@@ -1,6 +1,9 @@
 #include "Evenimente.h"
+#include "Restaurant.h"
+#include "Stoc.h"
 #include <iostream>
 #include <limits>
+#include <cstdlib>
 
 std::string InspectieSanitara::getNume() const {
     return "Inspectie Sanitara";

@@ -9,6 +9,7 @@
 #include <map>
 #include <cstdlib>
 
+
 restaurant::restaurant(std::string nume) : nume(std::move(nume)), nivelDecor(0), nivelPublicitate(0), gradMurdarie(0.0) {}
 
 restaurant::~restaurant() {
@@ -55,11 +56,17 @@ void restaurant::incepeZiua(int ziuaCurenta, stoc& Stoc, double& profitTotal) {
     ContextEveniment ctx{*this, Stoc, profitTotal, 0.0, false};
 
     if (sansaEveniment < 20) {
-        InspectieSanitara inspectie;
-        inspectie.Executa(ctx);
+        Eveniment* ev = FactoryEvenimente::creeaza(TipEveniment::INSPECTIE);
+        if (ev) {
+            ev->Executa(ctx);
+            delete ev;
+        }
     } else if (sansaEveniment < 35) {
-        PanaCurent pana;
-        pana.Executa(ctx);
+        Eveniment* ev = FactoryEvenimente::creeaza(TipEveniment::PANA);
+        if (ev) {
+            ev->Executa(ctx);
+            delete ev;
+        }
     }
 
     std::cout << "\n--- Stoc disponibil ---\n";
@@ -190,11 +197,17 @@ void restaurant::TriggerEvenimentClient(stoc& Stoc, double& profitTotal, double 
     ContextEveniment ctx{*this, Stoc, profitTotal, costTotalComanda, areLocLaMasa};
 
     if (tipClient < 10) {
-        Influencer inf;
-        inf.Executa(ctx);
+        Eveniment* ev = FactoryEvenimente::creeaza(TipEveniment::INFLUENCER);
+        if (ev) {
+            ev->Executa(ctx);
+            delete ev;
+        }
     } else if (tipClient < 20) {
-        CriticCulinar critic;
-        critic.Executa(ctx);
+        Eveniment* ev = FactoryEvenimente::creeaza(TipEveniment::CRITIC);
+        if (ev) {
+            ev->Executa(ctx);
+            delete ev;
+        }
     }
 }
 

@@ -5,6 +5,8 @@
 #include <fstream>
 #include <iostream>
 
+FileManager* FileManager::instanta = nullptr;
+
 void FileManager::IncarcaDate(stoc& S, meniu& M, restaurant& R) {
     IncarcaStoc(S, "Informatii/Stoc.txt");
     IncarcaMeniu(M, "Informatii/Meniu.txt");
@@ -15,9 +17,7 @@ void FileManager::IncarcaDate(stoc& S, meniu& M, restaurant& R) {
 
 void FileManager::IncarcaStoc(stoc& S, const std::string& path) {
     std::ifstream fin(path);
-    if (!fin.is_open()) {
-        throw EroareFisierCritica(path);
-    }
+    if (!fin.is_open()) throw EroareFisierCritica(path);
     std::string cuv;
     double cant, pretunitar;
     while (fin >> cuv >> cant >> pretunitar) {
@@ -28,9 +28,7 @@ void FileManager::IncarcaStoc(stoc& S, const std::string& path) {
 
 void FileManager::IncarcaMeniu(meniu& M, const std::string& path) {
     std::ifstream fin(path);
-    if (!fin.is_open()) {
-        throw EroareFisierCritica(path);
-    }
+    if (!fin.is_open()) throw EroareFisierCritica(path);
     std::string cuv;
     double pret;
     while (fin >> cuv >> pret) {
@@ -53,9 +51,7 @@ void FileManager::IncarcaMeniu(meniu& M, const std::string& path) {
 
 void FileManager::IncarcaRetete(meniu& M, const std::string& path) {
     std::ifstream fin(path);
-    if (!fin.is_open()) {
-        throw EroareFisierCritica(path);
-    }
+    if (!fin.is_open()) throw EroareFisierCritica(path);
     std::string numeProdus, numeIng;
     double cantIng;
     while (fin >> numeProdus >> numeIng >> cantIng) {
@@ -68,12 +64,9 @@ void FileManager::IncarcaRetete(meniu& M, const std::string& path) {
 
 void FileManager::IncarcaAngajati(restaurant& R, const std::string& path) {
     std::ifstream fin(path);
-    if (!fin.is_open()) {
-        throw EroareFisierCritica(path);
-    }
+    if (!fin.is_open()) throw EroareFisierCritica(path);
     std::string numeAngajat, functie;
     double salariu;
-
     while (fin >> numeAngajat >> functie >> salariu) {
         R.Angajeaza(new angajat(numeAngajat, functie, salariu));
     }
@@ -82,9 +75,7 @@ void FileManager::IncarcaAngajati(restaurant& R, const std::string& path) {
 
 void FileManager::IncarcaMese(restaurant& R, const std::string& path) {
     std::ifstream fin(path);
-    if (!fin.is_open()) {
-        throw EroareFisierCritica(path);
-    }
+    if (!fin.is_open()) throw EroareFisierCritica(path);
     int idMasa, capMasa;
     while (fin >> idMasa >> capMasa) {
         R.AdaugaMasa(masa(idMasa, capMasa));
