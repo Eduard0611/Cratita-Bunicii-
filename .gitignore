@@ -1,4 +1,7 @@
+# JetBrains IDEs (CLion, IntelliJ)
+.idea/
 
+# CMake build files
 build/
 install_dir/
 

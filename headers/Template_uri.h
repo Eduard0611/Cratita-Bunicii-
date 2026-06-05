@@ -8,7 +8,7 @@ class DepozitSigur {
 private:
     std::vector<T> obiecte;
 public:
-    void adauga(T element) {
+    void adauga(const T& element) {
         if (obiecte.size() < Limita) {
             obiecte.push_back(element);
         } else {
