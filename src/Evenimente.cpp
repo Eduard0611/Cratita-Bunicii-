@@ -40,6 +40,9 @@ void PanaCurent::Executa(ContextEveniment& ctx) {
     std::cin >> optiune;
 
     if (std::cin.fail()) {
+        if (std::cin.eof()) {
+            std::exit(0);
+        }
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         optiune = 2;
@@ -72,6 +75,15 @@ void Influencer::Executa(ContextEveniment& ctx) {
         std::cout << "2. Refuza (Publicitate -1)\n";
         int opt;
         std::cin >> opt;
+
+        if (std::cin.fail()) {
+            if (std::cin.eof()) {
+                std::exit(0);
+            }
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            opt = 2;
+        }
 
         if (opt == 1) {
             ctx.profitTotal -= ctx.costComanda;

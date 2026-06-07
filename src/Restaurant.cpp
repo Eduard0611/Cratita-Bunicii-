@@ -152,6 +152,9 @@ masa* restaurant::CautaSiOcupaMasa(int numarClienti, stoc& Stoc, const std::vect
     std::cin >> idMasaAleasa;
 
     if (std::cin.fail()) {
+        if (std::cin.eof()) {
+            std::exit(0);
+        }
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         idMasaAleasa = 0;
@@ -299,6 +302,9 @@ void restaurant::aprovizionareManuala(stoc& Stoc, double& profitTotal) {
         std::cin >> cant;
 
         if (std::cin.fail()) {
+            if (std::cin.eof()) {
+                std::exit(0);
+            }
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             cant = 0;
@@ -323,6 +329,9 @@ void restaurant::gestioneazaAprovizionare(stoc& Stoc, double& profitTotal) const
     std::cin >> raspuns;
 
     if (std::cin.fail()) {
+        if (std::cin.eof()) {
+            std::exit(0);
+        }
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         raspuns = 3;
@@ -360,6 +369,11 @@ void restaurant::MeniuAdministrare(double& profitTotal, bool& jocActiv) {
         std::cin >> optiune;
 
         if (std::cin.fail()) {
+             if (std::cin.eof()) {
+                 afiseazaRaportFinal();
+                 jocActiv = false;
+                 break;
+             }
              std::cin.clear();
              std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
              optiune = 0;
@@ -378,6 +392,9 @@ void restaurant::MeniuAdministrare(double& profitTotal, bool& jocActiv) {
                 std::cin >> locuri;
 
                 if (std::cin.fail() || locuri <= 0) {
+                    if (std::cin.eof()) {
+                        std::exit(0);
+                    }
                     std::cin.clear();
                     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                     std::cout << "Numar de locuri invalid!\n";
